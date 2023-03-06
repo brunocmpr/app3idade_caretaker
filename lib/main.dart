@@ -1,3 +1,5 @@
+import 'package:app3idade_caretaker/routes/routes.dart';
+import 'package:app3idade_caretaker/views/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,11 +16,8 @@ class App3Idade extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => LoginPage(),
-        '/home': (context) => HomePage(),
-      },
+      initialRoute: Routes.login,
+      routes: Routes.routes,
     );
   }
 }

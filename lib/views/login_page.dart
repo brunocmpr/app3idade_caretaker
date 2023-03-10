@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               ElevatedButton(
                 onPressed: _isLoading ? null : () => _submit(context),
-                child: const Text('Submit'),
+                child: const Text('Entrar'),
               ),
             ],
           ),

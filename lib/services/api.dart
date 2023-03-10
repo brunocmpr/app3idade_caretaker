@@ -1,3 +1,3 @@
 class API {
-  static const String url = "192.168.200.200:8080";
+  static const String url = "app3idade.herokuapp.com";
 }

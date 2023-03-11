@@ -18,6 +18,16 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _authService.getToken().then((token) {
+      if (token != null && token.isNotEmpty) {
+        Navigator.of(context).pushNamed(Routes.homePage, arguments: token);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Senha'),
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {

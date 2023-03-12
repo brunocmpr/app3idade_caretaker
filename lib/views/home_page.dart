@@ -24,9 +24,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                var navigator = Navigator.of(context);
-                await _authService.logout();
-                navigator.pop();
+                await _authService.logoutAndGoToLogin(context);
               },
               child: const Text('Logout'),
             ),

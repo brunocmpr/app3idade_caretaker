@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:app3idade_caretaker/routes/routes.dart';
+import 'package:flutter/material.dart';
 
 import 'package:app3idade_caretaker/services/token_buffer.dart';
 import 'package:http/http.dart' as http;
@@ -12,9 +14,10 @@ class AuthService {
   final _authEndpoint = '/auth';
   final _tokenType = 'tokenType';
   final _accessToken = 'accessToken';
-  final _tokenStorageKey = 'token';
+
   final _tokenBuffer = TokenBuffer();
 
+  final _tokenStorageKey = 'token';
   final mobileStorage = const FlutterSecureStorage();
 
   Future<String?> login(String email, String password) async {
@@ -40,7 +43,13 @@ class AuthService {
     return token != null && token.isNotEmpty;
   }
 
-  Future<void> logout() async {
+  Future<void> logoutAndGoToLogin(BuildContext context) async {
+    var navigator = Navigator.of(context);
+    await _clearToken();
+    navigator.pushNamedAndRemoveUntil(Routes.login, (route) => false);
+  }
+
+  Future<void> _clearToken() async {
     _tokenBuffer.clear();
     if (Platform.isAndroid || Platform.isIOS) {
       await mobileStorage.delete(key: _tokenStorageKey);
@@ -79,9 +88,7 @@ class AuthService {
   Future<http.Response> _loginToBackend(String email, String password) {
     return http.post(
       Uri.http(API.url, _authEndpoint),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: API.headerContentTypeJson,
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,

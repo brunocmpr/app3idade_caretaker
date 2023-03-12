@@ -61,9 +61,20 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _isLoading ? null : () => _submit(context),
                 child: const Text('Entrar'),
+              ),
+              const SizedBox(height: 16),
+              OutlinedButton(
+                onPressed: () => _navigateToRegisterPage(context),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Theme.of(context).primaryColor,
+                  side: BorderSide(color: Theme.of(context).primaryColor),
+                  backgroundColor: Colors.white,
+                ),
+                child: const Text('Não tem uma conta? Registre-se aqui'),
               ),
             ],
           ),
@@ -88,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
         _isLoading = false;
       });
       if (token != null) {
-        navigator.pushNamed(Routes.homePage, arguments: token);
+        navigator.pushReplacementNamed(Routes.homePage, arguments: token);
       } else {
         messenger.showSnackBar(
           const SnackBar(
@@ -97,5 +108,9 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     }
+  }
+
+  void _navigateToRegisterPage(BuildContext context) {
+    Navigator.of(context).pushNamed(Routes.userRegisterPage);
   }
 }

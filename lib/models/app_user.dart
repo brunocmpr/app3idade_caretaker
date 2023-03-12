@@ -28,12 +28,12 @@ class AppUser {
     });
   }
 
-  static AppUser fromJson(String j) => AppUser.fromMap(jsonDecode(j));
+  static AppUser fromJson(String json) => AppUser.fromMap(jsonDecode(json));
 
   String toJson() => jsonEncode(toMap());
 
-  static List<AppUser> fromJsonList(String j) {
-    final parsed = jsonDecode(j).cast<Map<String, dynamic>>();
+  static List<AppUser> fromJsonList(String json) {
+    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
     return parsed.map<AppUser>((map) => AppUser.fromMap(map)).toList();
   }
 }

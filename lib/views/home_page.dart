@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, Routes.patientRegisterPage);
               },
-              child: const Text('Logout'),
+              child: const Text('Registrar paciente'),
             ),
             OutlinedButton(
               style: OutlinedButton.styleFrom(

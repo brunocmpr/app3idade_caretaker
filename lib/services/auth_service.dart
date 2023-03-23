@@ -30,12 +30,15 @@ class AuthService {
     if (_tokenBuffer.isTokenAvailable()) {
       return _tokenBuffer.token;
     }
+    String? token;
     if (Platform.isAndroid || Platform.isIOS) {
-      return await mobileStorage.read(key: _tokenStorageKey);
+      token = await mobileStorage.read(key: _tokenStorageKey);
     } else {
       final desktopStorage = await SharedPreferences.getInstance();
-      return desktopStorage.getString(_tokenStorageKey);
+      token = desktopStorage.getString(_tokenStorageKey);
     }
+    _tokenBuffer.token = token ?? "";
+    return token;
   }
 
   Future<bool> isLoggedIn() async {

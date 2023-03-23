@@ -37,7 +37,7 @@ class PatientRepository {
   }
 
   Future<Patient> create(Patient patient) async {
-    const headers = API.headerContentTypeJson;
+    final headers = API.headerContentTypeJson;
     headers.addAll(API.headerAuthorization);
 
     final http.Response response = await http.post(
@@ -56,7 +56,7 @@ class PatientRepository {
   }
 
   Future<Patient> update(Patient patient) async {
-    const headers = API.headerContentTypeJson;
+    final headers = API.headerContentTypeJson;
     headers.addAll(API.headerAuthorization);
 
     final http.Response response = await http.put(
@@ -74,7 +74,7 @@ class PatientRepository {
   }
 
   Future<Patient> deleteById(int id) async {
-    const headers = API.headerContentTypeJson;
+    final headers = API.headerContentTypeJson;
     headers.addAll(API.headerAuthorization);
 
     final http.Response response = await http.delete(

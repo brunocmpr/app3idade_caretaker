@@ -17,19 +17,12 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _strengthController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
-  List<XFile>? _images = [];
+  List<XFile> _images = [];
   final _name = 'Nome:';
   final _strength = 'Strength:';
   final double _labelWidth = 90;
 
   final DrugService drugService = DrugService();
-
-  Future<void> _selectImages() async {
-    final List<XFile> images = await _imagePicker.pickMultiImage();
-    setState(() {
-      _images = images;
-    });
-  }
 
   void _submit(BuildContext context) async {
     Drug drug = Drug.newDrug(_nameController.text.trim(), _strengthController.text.trim());
@@ -46,6 +39,13 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
         SnackBar(content: Text("Erro: $exception")),
       );
     }
+  }
+
+  Future<void> _selectImages() async {
+    final List<XFile> images = await _imagePicker.pickMultiImage();
+    setState(() {
+      _images = images;
+    });
   }
 
   @override

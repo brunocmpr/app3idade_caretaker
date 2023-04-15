@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:app3idade_caretaker/models/drug.dart';
-import 'package:app3idade_caretaker/repository/drug_repository.dart';
 import 'package:app3idade_caretaker/services/drug_service.dart';
+import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
 // import 'package:app3idade_caretaker/services/drug_service.dart';
 import 'package:flutter/material.dart';
 
@@ -71,9 +71,17 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
                   child: const Text('Selecione fotos'),
                 ),
                 const SizedBox(width: 8.0),
-                Text(_images.isEmpty ? '${_images.length} imagem(ns) selecionadas' : 'Nenhuma imagem selecionada'),
+                Text(_images.isNotEmpty ? '${_images.length} imagem(ns) selecionadas' : 'Nenhuma imagem selecionada'),
               ],
             ),
+            if (_images.isNotEmpty)
+              SelectedImagesWidget(
+                  images: _images,
+                  onImageRemoved: (index) {
+                    setState(() {
+                      _images.removeAt(index);
+                    });
+                  }),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {

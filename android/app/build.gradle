@@ -26,8 +26,9 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-
-    compileSdkVersion flutter.compileSdkVersion
+    // Replaced with 33 for compatibility with image_picker dependency
+    // compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {

@@ -71,7 +71,7 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
                   child: const Text('Selecione fotos'),
                 ),
                 const SizedBox(width: 8.0),
-                Text(_images != null ? '${_images!.length} imagem(ns) selecionadas' : 'Nenhuma imagem selecionada'),
+                Text(_images.isEmpty ? '${_images.length} imagem(ns) selecionadas' : 'Nenhuma imagem selecionada'),
               ],
             ),
             const SizedBox(height: 16.0),

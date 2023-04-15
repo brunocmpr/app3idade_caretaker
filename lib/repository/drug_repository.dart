@@ -7,12 +7,11 @@ import 'package:app3idade_caretaker/models/drug.dart';
 import 'package:app3idade_caretaker/services/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:image_picker/image_picker.dart';
 
 class DrugRepository {
   static const baseUri = '/drug';
 
-  Future<Drug> create(Drug drug, List<XFile>? images) async {
+  Future<Drug> create(Drug drug, List<File>? images) async {
     var request = http.MultipartRequest('POST', Uri.http(API.url, baseUri));
 
     request.fields['drugForm'] = drug.toJson();

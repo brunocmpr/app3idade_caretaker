@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app3idade_caretaker/models/drug.dart';
 import 'package:app3idade_caretaker/repository/drug_repository.dart';
 import 'package:app3idade_caretaker/services/drug_service.dart';
@@ -17,7 +19,7 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _strengthController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
-  List<XFile> _images = [];
+  List<File> _images = [];
   final _name = 'Nome:';
   final _strength = 'Strength:';
   final double _labelWidth = 90;
@@ -44,7 +46,7 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   Future<void> _selectImages() async {
     final List<XFile> images = await _imagePicker.pickMultiImage();
     setState(() {
-      _images = images;
+      _images = images.map((xfile) => File(xfile.path)).toList();
     });
   }
 

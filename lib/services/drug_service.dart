@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:app3idade_caretaker/models/drug.dart';
 import 'package:app3idade_caretaker/repository/drug_repository.dart';
-import 'package:image_picker/image_picker.dart';
 
 class DrugService {
   DrugRepository drugRepository = DrugRepository();
 
-  Future<Drug> createDrug(Drug drug, List<XFile>? images) {
+  Future<Drug> createDrug(Drug drug, List<File>? images) {
     return drugRepository.create(drug, images);
   }
 }

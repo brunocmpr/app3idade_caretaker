@@ -13,13 +13,16 @@ class DrugRepository {
 
   Future<Drug> create(Drug drug, List<File>? images) async {
     var request = http.MultipartRequest('POST', Uri.http(API.url, baseUri));
+    request.headers.addAll(API.headerAuthorization);
 
     request.fields['drugForm'] = drug.toJson();
 
     if (images != null) {
       for (int i = 0; i < images.length && i < 4; i++) {
         final file = await images[i].readAsBytes();
-        request.files.add(http.MultipartFile.fromBytes('images', file, filename: 'image$i'));
+        final fileExtension = images[i].path.split('/').last.split('.').last;
+        //TODO provide MediaType for http.MultipartFile.fromBytes
+        request.files.add(http.MultipartFile.fromBytes('images', file, filename: 'image$i.$fileExtension'));
       }
     }
 

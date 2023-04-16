@@ -14,7 +14,8 @@ class Drug {
   }
 
   static Drug fromMap(Map<String, dynamic> map) {
-    return Drug(map['id'], map['name'], map['strength'], map['imageIds']);
+    return Drug(map['id'], map['name'], map['strength'],
+        (map['imageIds'] as List<dynamic>).map((imageId) => imageId as int).toList());
   }
 
   static List<Drug> fromMaps(List<Map<String, dynamic>> maps) {

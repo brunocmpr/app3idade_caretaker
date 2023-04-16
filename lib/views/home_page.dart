@@ -30,6 +30,12 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('Registrar paciente'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.drugRegisterPage);
+              },
+              child: const Text('Registrar medicamento'),
+            ),
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 foregroundColor: Theme.of(context).primaryColor,

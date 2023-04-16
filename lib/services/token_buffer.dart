@@ -7,7 +7,7 @@ class TokenBuffer {
     if (value.isNotEmpty) {
       _token = value;
     } else {
-      throw Exception('Estado de autenticação inválido');
+      clear();
     }
   }
 

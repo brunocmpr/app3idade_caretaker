@@ -1,5 +1,4 @@
 import 'package:app3idade_caretaker/routes/routes.dart';
-import 'package:app3idade_caretaker/views/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

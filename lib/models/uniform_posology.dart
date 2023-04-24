@@ -15,20 +15,20 @@ class UniformPosology {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'startDateTime': startDateTime,
-      'endDateTime': endDateTime,
+      'startDateTime': startDateTime.toIso8601String(),
+      if (endDateTime != null) 'endDateTime': endDateTime!.toIso8601String(),
       'timeLength': timeLength,
-      'timeUnit': timeUnit
+      'timeUnit': timeUnit.name
     };
   }
 
   static UniformPosology fromMap(Map<String, dynamic> map) {
     return UniformPosology(
-      map['id'],
-      map['startDateTime'],
-      map['timeLength'],
-      map['timeUnit'],
-      map['endDateTime'],
+      map['id'] as int,
+      map['startDateTime'] as DateTime,
+      map['timeLength'] as int,
+      map['timeUnit'] as TimeUnit,
+      map['endDateTime'] as DateTime,
     );
   }
 

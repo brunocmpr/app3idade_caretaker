@@ -11,10 +11,6 @@ class DrugService {
   }
 
   Future<List<Drug>> findAll() {
-    //TODO IMPLEMENT
-    return Future.value([
-      Drug(1, 'Paracetamol', '500mg', []),
-      Drug(2, 'Citalopram', '10 mg', []),
-    ]);
+    return drugRepository.findAll();
   }
 }

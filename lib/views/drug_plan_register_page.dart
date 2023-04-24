@@ -1,11 +1,10 @@
 import 'package:app3idade_caretaker/models/drug.dart';
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/models/patient.dart';
+import 'package:app3idade_caretaker/routes/routes.dart';
 import 'package:app3idade_caretaker/services/drug_service.dart';
 import 'package:app3idade_caretaker/services/patient_service.dart';
 import 'package:flutter/material.dart';
-
-import '../routes/routes.dart';
 
 class DrugPlanPage extends StatefulWidget {
   const DrugPlanPage({super.key});

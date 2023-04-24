@@ -1,7 +1,6 @@
+import 'package:app3idade_caretaker/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:app3idade_caretaker/services/auth_service.dart';
-
-import '../routes/routes.dart';
 
 class HomePage extends StatelessWidget {
   final String token;

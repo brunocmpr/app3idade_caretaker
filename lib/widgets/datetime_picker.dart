@@ -17,12 +17,18 @@ class DateTimePicker extends StatefulWidget {
 class _DateTimePickerState extends State<DateTimePicker> {
   late DateTime _initialDate;
   late DateTime _firstDate;
+  late TimeOfDay _initialTime;
   final maxYear = 2100;
   @override
   void initState() {
     super.initState();
+    resetState();
+  }
+
+  void resetState() {
     _initialDate = widget.initialDate ?? DateTime.now();
     _firstDate = widget.firstDate ?? DateTime.now();
+    _initialTime = TimeOfDay.fromDateTime(_initialDate);
   }
 
   @override
@@ -45,15 +51,19 @@ class _DateTimePickerState extends State<DateTimePicker> {
       lastDate: DateTime(maxYear),
     );
     if (pickedDate == null || !mounted) {
+      resetState();
       return null;
     }
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: _initialTime,
     );
     if (pickedTime == null) {
+      resetState();
       return null;
     }
+    _initialDate = pickedDate;
+    _initialTime = pickedTime;
     final DateTime combinedDateTime =
         DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
     return combinedDateTime;

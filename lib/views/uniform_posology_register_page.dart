@@ -19,7 +19,7 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
       DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
   DateTime? _endDate;
   int? _timeLength = 8;
-  TimeUnit _timeUnit = TimeUnit.hours;
+  TimeUnit _timeUnit = TimeUnit.hour;
 
   late TextEditingController _timeLengthController;
 
@@ -35,16 +35,16 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
     if (_endDate != null && _timeLength != null && !_timeLength!.isNegative) {
       int unitMultiplier = 1;
       switch (_timeUnit) {
-        case TimeUnit.minutes:
+        case TimeUnit.minute:
           unitMultiplier = 1;
           break;
-        case TimeUnit.hours:
+        case TimeUnit.hour:
           unitMultiplier = 60;
           break;
-        case TimeUnit.days:
+        case TimeUnit.day:
           unitMultiplier = 60 * 24;
           break;
-        case TimeUnit.weeks:
+        case TimeUnit.week:
           unitMultiplier = 60 * 24 * 7;
           break;
       }

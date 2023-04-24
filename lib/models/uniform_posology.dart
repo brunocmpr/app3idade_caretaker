@@ -1,13 +1,13 @@
 class UniformPosology {}
 
-enum TimeUnit { minutes, hours, days, weeks }
+enum TimeUnit { minute, hour, day, week }
 
 extension TimeUnitPtBr on TimeUnit {
   static Map<TimeUnit, String> map = {
-    TimeUnit.minutes: 'minutos',
-    TimeUnit.hours: 'horas',
-    TimeUnit.days: 'dias',
-    TimeUnit.weeks: 'semanas',
+    TimeUnit.minute: 'minutos',
+    TimeUnit.hour: 'horas',
+    TimeUnit.day: 'dias',
+    TimeUnit.week: 'semanas',
   };
   String namePtBr() {
     return map[this] ?? toString();

@@ -1,4 +1,50 @@
-class UniformPosology {}
+import 'dart:convert';
+
+import 'package:app3idade_caretaker/models/drug_plan.dart';
+
+class UniformPosology {
+  int? id;
+  late DrugPlan? drugPlan;
+  DateTime startDateTime;
+  DateTime? endDateTime;
+  int timeLength;
+  TimeUnit timeUnit;
+  UniformPosology.newPosology(this.startDateTime, this.timeLength, this.timeUnit, [this.endDateTime, this.drugPlan]);
+  UniformPosology(this.id, this.startDateTime, this.timeLength, this.timeUnit, [this.endDateTime, this.drugPlan]);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'startDateTime': startDateTime,
+      'endDateTime': endDateTime,
+      'timeLength': timeLength,
+      'timeUnit': timeUnit
+    };
+  }
+
+  static UniformPosology fromMap(Map<String, dynamic> map) {
+    return UniformPosology(
+      map['id'],
+      map['startDateTime'],
+      map['timeLength'],
+      map['timeUnit'],
+      map['endDateTime'],
+    );
+  }
+
+  static List<UniformPosology> fromMaps(List<Map<String, dynamic>> maps) {
+    return List.generate(maps.length, (i) => UniformPosology.fromMap(maps[i]));
+  }
+
+  static UniformPosology fromJson(String json) => UniformPosology.fromMap(jsonDecode(json));
+
+  String toJson() => jsonEncode(toMap());
+
+  static List<UniformPosology> fromJsonList(String json) {
+    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
+    return parsed.map<UniformPosology>((map) => UniformPosology.fromMap(map)).toList();
+  }
+}
 
 enum TimeUnit { minute, hour, day, week }
 

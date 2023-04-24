@@ -1,5 +1,7 @@
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/models/uniform_posology.dart';
+import 'package:app3idade_caretaker/routes/routes.dart';
+import 'package:app3idade_caretaker/services/drug_plan_service.dart';
 import 'package:app3idade_caretaker/util/util.dart';
 import 'package:app3idade_caretaker/widgets/datetime_picker.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,6 @@ import 'package:flutter/material.dart';
 class UniformPosologyRegisterPage extends StatefulWidget {
   const UniformPosologyRegisterPage({super.key, required this.drugPlan});
   final DrugPlan drugPlan;
-
   @override
   State<StatefulWidget> createState() => UniformPosologyRegisterPageState();
 }
@@ -21,7 +22,32 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
   int? _timeLength = 8;
   TimeUnit _timeUnit = TimeUnit.hour;
 
+  final _drugPlanService = DrugPlanService();
+
   late TextEditingController _timeLengthController;
+
+  bool get formStateValid => _timeLength != null && !_timeLength!.isNegative;
+
+  String get patientAndDrugDescription =>
+      'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.';
+
+  Future<void> _submit() async {
+    UniformPosology newPosology = UniformPosology.newPosology(_startDate, _timeLength!, _timeUnit, _endDate);
+    widget.drugPlan.uniformPosology = newPosology;
+    try {
+      var navigator = Navigator.of(context);
+      var messenger = ScaffoldMessenger.of(context);
+      await _drugPlanService.createDrugPlan(widget.drugPlan);
+      navigator.popUntil(ModalRoute.withName(Routes.homePage));
+      messenger.showSnackBar(
+        const SnackBar(content: Text("Tratamento criado com sucesso")),
+      );
+    } on Exception catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $exception")),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -32,7 +58,7 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
   @override
   Widget build(BuildContext context) {
     String planDescription = 'Favor preencher todos os campos';
-    if (_endDate != null && _timeLength != null && !_timeLength!.isNegative) {
+    if (_endDate != null && formStateValid) {
       int unitMultiplier = 1;
       switch (_timeUnit) {
         case TimeUnit.minute:
@@ -54,10 +80,10 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
 
       planDescription =
           '''Serão tomadas $numberDoses doses no total, a cada intervalo de $_timeLength ${_timeUnit.namePtBr()}.
-A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tomada em ${formatDateTime(lastDoseDate)}''';
-    } else if (_timeLength != null && !_timeLength!.isNegative) {
+A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tomada em ${formatDateTime(lastDoseDate)}.''';
+    } else if (formStateValid) {
       planDescription =
-          'O tratamento será continuo, iniciando em ${formatDateTime(_startDate)}, com doses a cada $_timeLength ${_timeUnit.namePtBr()}';
+          'Inicia em ${formatDateTime(_startDate)}, com doses a cada $_timeLength ${_timeUnit.namePtBr()}, não tendo previsão de fim.';
     }
     var dropdownTimeUnitItems =
         TimeUnit.values.map((unit) => DropdownMenuItem(value: unit, child: Text(unit.namePtBr()))).toList();
@@ -151,8 +177,18 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
                   )
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
+              Text(patientAndDrugDescription),
               Text(planDescription),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate() && formStateValid) {
+                    _submit();
+                  }
+                },
+                child: const Text('Criar'),
+              )
             ],
           ),
         ),

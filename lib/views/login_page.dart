@@ -111,6 +111,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _navigateToRegisterPage(BuildContext context) {
-    Navigator.of(context).pushNamed(Routes.userRegisterPage);
+    Navigator.of(context).pushNamed(Routes.createUser);
   }
 }

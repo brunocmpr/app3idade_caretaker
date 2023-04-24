@@ -9,6 +9,8 @@ class Drug {
   Drug(this.id, this.name, this.strength, this.imageIds);
   Drug.newDrug(this.name, this.strength);
 
+  String get nameAndStrength => strength.isNotEmpty ? '$name - $strength' : name;
+
   Map<String, dynamic> toMap() {
     return {'id': id, 'name': name, 'strength': strength};
   }

@@ -19,4 +19,13 @@ class PatientService {
   Future<Patient> deleteUserById(int id) async {
     return patientRepository.deleteById(id);
   }
+
+  Future<List<Patient>> findAll() {
+    //TODO IMPLEMENT
+    // return Future.value(List<Patient>.empty());
+    return Future.value([
+      Patient(1, 'Sônia', 'Campera', 'Dona Sônia'),
+      Patient(2, 'Geraldo', 'Campera', 'Seu Geraldo'),
+    ]);
+  }
 }

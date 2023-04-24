@@ -26,15 +26,21 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, Routes.patientRegisterPage);
+                Navigator.pushNamed(context, Routes.createPatient);
               },
               child: const Text('Registrar paciente'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, Routes.drugRegisterPage);
+                Navigator.pushNamed(context, Routes.createDrug);
               },
               child: const Text('Registrar medicamento'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.createBaseDrugPlan);
+              },
+              child: const Text('Registrar plano de tratamento'),
             ),
             OutlinedButton(
               style: OutlinedButton.styleFrom(

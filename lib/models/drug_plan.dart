@@ -29,7 +29,7 @@ class DrugPlan {
       'id': id,
       'patientId': patient.id,
       'drugId': drug.id,
-      'posologyType': type.name,
+      'posologyType': type.name.toUpperCase(),
       'uniformPosology': uniformPosology!.toMap(),
       // if(weeklyPosology!= null)'weeklyPosology': weeklyPosology!.toMap(),
       // if(customPosologies!= null)'customPosologies': customPosologies,
@@ -47,7 +47,7 @@ class DrugPlan {
       map['id'],
       Patient.fromMap(map['patient']),
       Drug.fromMap(map['drug']),
-      map['type'],
+      PosologyType.values.byName((map['posologyType'] as String).toLowerCase()),
       uniformPosology,
       // weeklyPosology,
       // customPosologies,
@@ -56,9 +56,11 @@ class DrugPlan {
 
   String toJson() => jsonEncode(toMap());
 
-  static DrugPlan fromJson(String json) {
+  static DrugPlan fromJson(String json) => DrugPlan.fromMap(jsonDecode(json));
+
+  static List<DrugPlan> fromJsonList(String json) {
     final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
-    return parsed.map<Patient>((map) => Patient.fromMap(map)).toList();
+    return parsed.map<DrugPlan>((map) => DrugPlan.fromMap(map)).toList();
   }
 }
 

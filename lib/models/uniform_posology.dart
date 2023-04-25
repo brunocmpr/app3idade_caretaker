@@ -18,17 +18,21 @@ class UniformPosology {
       'startDateTime': startDateTime.toIso8601String(),
       if (endDateTime != null) 'endDateTime': endDateTime!.toIso8601String(),
       'timeLength': timeLength,
-      'timeUnit': timeUnit.name
+      'timeUnit': timeUnit.name.toUpperCase()
     };
   }
 
   static UniformPosology fromMap(Map<String, dynamic> map) {
+    DateTime? endDateTime;
+    if (map['endDateTime'] != null) {
+      endDateTime = DateTime.parse(map['endDateTime']);
+    }
     return UniformPosology(
       map['id'] as int,
-      map['startDateTime'] as DateTime,
+      DateTime.parse(map['startDateTime']),
       map['timeLength'] as int,
-      map['timeUnit'] as TimeUnit,
-      map['endDateTime'] as DateTime,
+      TimeUnit.values.byName((map['timeUnit']).toLowerCase()),
+      endDateTime,
     );
   }
 

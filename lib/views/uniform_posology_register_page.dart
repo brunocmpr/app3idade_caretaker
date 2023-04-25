@@ -26,7 +26,8 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
 
   late TextEditingController _timeLengthController;
 
-  bool get formStateValid => _timeLength != null && !_timeLength!.isNegative;
+  bool get formStateValid =>
+      _timeLength != null && !_timeLength!.isNegative && (_endDate == null || _startDate.compareTo(_endDate!) < 0);
 
   String get patientAndDrugDescription =>
       'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.';
@@ -57,7 +58,7 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
 
   @override
   Widget build(BuildContext context) {
-    String planDescription = 'Favor preencher todos os campos';
+    String planDescription = 'Favor preencher todos os campos corretamente.';
     if (_endDate != null && formStateValid) {
       int unitMultiplier = 1;
       switch (_timeUnit) {
@@ -182,11 +183,7 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
               Text(planDescription),
               const SizedBox(height: 32),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate() && formStateValid) {
-                    _submit();
-                  }
-                },
+                onPressed: _formKey.currentState!.validate() && formStateValid ? _submit : null,
                 child: const Text('Criar'),
               )
             ],

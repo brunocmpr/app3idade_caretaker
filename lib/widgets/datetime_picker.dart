@@ -5,9 +5,10 @@ class DateTimePicker extends StatefulWidget {
   final ValueChanged<DateTime> onDateTimeChanged;
   final DateTime? firstDate;
   final DateTime? initialDate;
+  final DateTime? lastDate;
 
   const DateTimePicker(
-      {Key? key, required this.label, required this.onDateTimeChanged, this.firstDate, this.initialDate})
+      {Key? key, required this.label, required this.onDateTimeChanged, this.firstDate, this.initialDate, this.lastDate})
       : super(key: key);
 
   @override
@@ -17,6 +18,7 @@ class DateTimePicker extends StatefulWidget {
 class _DateTimePickerState extends State<DateTimePicker> {
   late DateTime _initialDate;
   late DateTime _firstDate;
+  late DateTime _lastDate;
   late TimeOfDay _initialTime;
   final maxYear = 2100;
   @override
@@ -29,6 +31,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
     _initialDate = widget.initialDate ?? DateTime.now();
     _firstDate = widget.firstDate ?? DateTime.now();
     _initialTime = TimeOfDay.fromDateTime(_initialDate);
+    _lastDate = widget.lastDate ?? DateTime(maxYear);
   }
 
   @override
@@ -48,7 +51,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
       context: context,
       initialDate: _initialDate,
       firstDate: _firstDate,
-      lastDate: DateTime(maxYear),
+      lastDate: _lastDate,
     );
     if (pickedDate == null || !mounted) {
       resetState();

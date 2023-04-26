@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app3idade_caretaker/models/custom_posology.dart';
 import 'package:app3idade_caretaker/models/uniform_posology.dart';
 
 import 'patient.dart';
@@ -11,8 +12,8 @@ class DrugPlan {
   Drug drug;
   PosologyType type;
   UniformPosology? uniformPosology;
+  List<CustomPosology>? customPosologies;
   // WeeklyPosology? weeklyPosology;
-  // List<CustomPosology>? customPosologies;
 
   DrugPlan.newPlan(this.patient, this.drug, this.type);
   DrugPlan(
@@ -21,7 +22,8 @@ class DrugPlan {
     this.drug,
     this.type, [
     this.uniformPosology,
-    /* this. weeklyPosology , this.customPosologies*/
+    this.customPosologies,
+    //this. weeklyPosology
   ]);
 
   Map<String, dynamic> toMap() {
@@ -30,18 +32,21 @@ class DrugPlan {
       'patientId': patient.id,
       'drugId': drug.id,
       'posologyType': type.name.toUpperCase(),
-      'uniformPosology': uniformPosology!.toMap(),
+      if (uniformPosology != null) 'uniformPosology': uniformPosology!.toMap(),
+      if (customPosologies != null) 'customPosologies': customPosologies!.map((posology) => posology.toMap()).toList(),
       // if(weeklyPosology!= null)'weeklyPosology': weeklyPosology!.toMap(),
-      // if(customPosologies!= null)'customPosologies': customPosologies,
     };
   }
 
   static DrugPlan fromMap(Map<String, dynamic> map) {
     UniformPosology? uniformPosology;
+    List<CustomPosology>? customPosologies;
     // WeeklyPosology? weeklyPosology;
-    // List<CustomPosology>? customPosologies;
     if (map['uniformPosology'] != null) {
       uniformPosology = UniformPosology.fromMap(map['uniformPosology']);
+    }
+    if (map['customPosologies'] != null) {
+      customPosologies = CustomPosology.fromJsonList(map['customPosologies']);
     }
     return DrugPlan(
       map['id'],
@@ -49,8 +54,8 @@ class DrugPlan {
       Drug.fromMap(map['drug']),
       PosologyType.values.byName((map['posologyType'] as String).toLowerCase()),
       uniformPosology,
+      customPosologies,
       // weeklyPosology,
-      // customPosologies,
     );
   }
 

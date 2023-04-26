@@ -183,7 +183,9 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
               Text(planDescription),
               const SizedBox(height: 32),
               ElevatedButton(
-                onPressed: _formKey.currentState!.validate() && formStateValid ? _submit : null,
+                onPressed: _formKey.currentState != null && _formKey.currentState!.validate() && formStateValid
+                    ? _submit
+                    : null,
                 child: const Text('Criar'),
               )
             ],

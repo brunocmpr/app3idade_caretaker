@@ -96,7 +96,17 @@ class DrugPlanPageState extends State<DrugPlanPage> {
                   }
                 },
                 child: const Text('Registrar cronograma uniforme'),
-              )
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.custom);
+                    Navigator.pushNamed(context, Routes.createCustomPosology, arguments: drugPlan);
+                  }
+                },
+                child: const Text('Registrar cronograma customizado'),
+              ),
             ],
           ),
         ),

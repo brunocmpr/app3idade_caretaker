@@ -9,6 +9,8 @@ class Patient {
   Patient(this.id, this.firstName, this.lastName, [this.nickname]);
   Patient.newPatient(this.firstName, this.lastName, [this.nickname]);
 
+  String get preferredName => nickname ?? '$this.firstName $this.lastName';
+
   Map<String, dynamic> toMap() {
     return {'id': id, 'firstName': firstName, 'lastName': lastName, 'nickname': nickname};
   }

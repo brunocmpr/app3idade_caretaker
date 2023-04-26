@@ -9,4 +9,8 @@ class DrugService {
   Future<Drug> createDrug(Drug drug, List<File>? images) {
     return drugRepository.create(drug, images);
   }
+
+  Future<List<Drug>> findAll() {
+    return drugRepository.findAll();
+  }
 }

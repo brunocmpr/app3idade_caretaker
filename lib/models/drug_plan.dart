@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app3idade_caretaker/models/custom_posology.dart';
 import 'package:app3idade_caretaker/models/uniform_posology.dart';
+import 'package:app3idade_caretaker/models/weekly_posology.dart';
 
 import 'patient.dart';
 import 'drug.dart';
@@ -13,18 +14,11 @@ class DrugPlan {
   PosologyType type;
   UniformPosology? uniformPosology;
   List<CustomPosology>? customPosologies;
-  // WeeklyPosology? weeklyPosology;
+  WeeklyPosology? weeklyPosology;
 
   DrugPlan.newPlan(this.patient, this.drug, this.type);
-  DrugPlan(
-    this.id,
-    this.patient,
-    this.drug,
-    this.type, [
-    this.uniformPosology,
-    this.customPosologies,
-    //this. weeklyPosology
-  ]);
+  DrugPlan(this.id, this.patient, this.drug, this.type,
+      [this.uniformPosology, this.customPosologies, this.weeklyPosology]);
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,19 +28,22 @@ class DrugPlan {
       'posologyType': type.name.toUpperCase(),
       if (uniformPosology != null) 'uniformPosology': uniformPosology!.toMap(),
       if (customPosologies != null) 'customPosologies': customPosologies!.map((posology) => posology.toMap()).toList(),
-      // if(weeklyPosology!= null)'weeklyPosology': weeklyPosology!.toMap(),
+      if (weeklyPosology != null) 'weeklyPosology': weeklyPosology!.toMap(),
     };
   }
 
   static DrugPlan fromMap(Map<String, dynamic> map) {
     UniformPosology? uniformPosology;
     List<CustomPosology>? customPosologies;
-    // WeeklyPosology? weeklyPosology;
+    WeeklyPosology? weeklyPosology;
     if (map['uniformPosology'] != null) {
       uniformPosology = UniformPosology.fromMap(map['uniformPosology']);
     }
     if (map['customPosologies'] != null) {
       customPosologies = CustomPosology.fromJsonList(map['customPosologies']);
+    }
+    if (map['weeklyPosology'] != null) {
+      weeklyPosology = WeeklyPosology.fromMap(map['weeklyPosology']);
     }
     return DrugPlan(
       map['id'],
@@ -55,7 +52,7 @@ class DrugPlan {
       PosologyType.values.byName((map['posologyType'] as String).toLowerCase()),
       uniformPosology,
       customPosologies,
-      // weeklyPosology,
+      weeklyPosology,
     );
   }
 

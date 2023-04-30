@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:app3idade_caretaker/models/drug_plan.dart';
+import 'package:app3idade_caretaker/models/weekly_posology.dart';
 import 'package:app3idade_caretaker/util/util.dart';
 import 'package:app3idade_caretaker/widgets/dayofweek_time.dart';
 import 'package:app3idade_caretaker/widgets/dayofweek_time_display.dart';
@@ -17,9 +18,37 @@ class WeeklyPosologyRegisterPage extends StatefulWidget {
 class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> {
   final Map<int, List<TimeOfDay>> _timeMap = {};
 
+  void _submit() {}
+
   int _getNumberOfTimes() {
     if (_timeMap.isEmpty) return 0;
     return _timeMap.values.reduce((accumulatorList, localList) => [...accumulatorList, ...localList]).length;
+  }
+
+  void removeDayOfWeekTime(DayOfWeekTime obj) {
+    List<TimeOfDay>? times = _timeMap[obj.day];
+    if (times == null || times.isEmpty) return;
+    times.remove(obj.time);
+    if (times.isEmpty) {
+      setState(() {
+        _timeMap.remove(obj.day);
+      });
+    } else {
+      setState(() {
+        _timeMap[obj.day] = times;
+      });
+    }
+  }
+
+  void assignNewWeeklyTime(DayOfWeekTime value) {
+    int dayOfWeek = value.day;
+    TimeOfDay time = value.time;
+    if (_timeMap[dayOfWeek] != null && _timeMap[dayOfWeek]!.contains(time)) {
+      return;
+    }
+    setState(() {
+      _timeMap[dayOfWeek] = [..._timeMap[dayOfWeek] ?? [], time];
+    });
   }
 
   @override
@@ -52,36 +81,11 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
             DayOfWeekTimeDisplay(
                 timeMap: _timeMap, dayOfWeekNames: daysPtBr, onDayOfWeekTimeRemoved: removeDayOfWeekTime),
             const SizedBox(height: 8),
-            Column(children: timeComponents)
+            Column(children: timeComponents),
+            ElevatedButton(onPressed: numberOfTimes > 0 ? _submit : null, child: const Text('Criar')),
           ],
         ),
       ),
     );
-  }
-
-  void removeDayOfWeekTime(DayOfWeekTime obj) {
-    List<TimeOfDay>? times = _timeMap[obj.day];
-    if (times == null || times.isEmpty) return;
-    times.remove(obj.time);
-    if (times.isEmpty) {
-      setState(() {
-        _timeMap.remove(obj.day);
-      });
-    } else {
-      setState(() {
-        _timeMap[obj.day] = times;
-      });
-    }
-  }
-
-  void assignNewWeeklyTime(DayOfWeekTime value) {
-    int dayOfWeek = value.day;
-    TimeOfDay time = value.time;
-    if (_timeMap[dayOfWeek] != null && _timeMap[dayOfWeek]!.contains(time)) {
-      return;
-    }
-    setState(() {
-      _timeMap[dayOfWeek] = [..._timeMap[dayOfWeek] ?? [], time];
-    });
   }
 }

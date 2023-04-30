@@ -15,13 +15,11 @@ class WeeklyPosologyRegisterPage extends StatefulWidget {
 }
 
 class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> {
-  final Map<int, List<TimeOfDay>> _times = {};
-  static const dayOfWeek = 'dayOfWeek';
-  static const timeOfDay = 'timeOfDay';
+  final Map<int, List<TimeOfDay>> _timeMap = {};
 
   int _getNumberOfTimes() {
-    if (_times.isEmpty) return 0;
-    return _times.values.reduce((accumulatorList, localList) => [...accumulatorList, ...localList]).length;
+    if (_timeMap.isEmpty) return 0;
+    return _timeMap.values.reduce((accumulatorList, localList) => [...accumulatorList, ...localList]).length;
   }
 
   @override
@@ -52,7 +50,7 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
                 '$numberOfTimes horario${numberOfTimes == 1 ? '' : 's'} semana${numberOfTimes == 1 ? 'l' : 'is'} selecionado${numberOfTimes == 1 ? '' : 's'}:'),
             const SizedBox(height: 8),
             DayOfWeekTimeDisplay(
-                timeMap: _times, dayOfWeekNames: daysPtBr, onDayOfWeekTimeRemoved: removeDayOfWeekTime),
+                timeMap: _timeMap, dayOfWeekNames: daysPtBr, onDayOfWeekTimeRemoved: removeDayOfWeekTime),
             const SizedBox(height: 8),
             Column(children: timeComponents)
           ],
@@ -62,22 +60,28 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
   }
 
   void removeDayOfWeekTime(DayOfWeekTime obj) {
-    List<TimeOfDay>? timeMap = _times[obj.day];
-    if (timeMap == null || timeMap.isEmpty) return;
-    timeMap.remove(obj.time);
-    setState(() {
-      _times[obj.day] = timeMap;
-    });
+    List<TimeOfDay>? times = _timeMap[obj.day];
+    if (times == null || times.isEmpty) return;
+    times.remove(obj.time);
+    if (times.isEmpty) {
+      setState(() {
+        _timeMap.remove(obj.day);
+      });
+    } else {
+      setState(() {
+        _timeMap[obj.day] = times;
+      });
+    }
   }
 
   void assignNewWeeklyTime(DayOfWeekTime value) {
     int dayOfWeek = value.day;
     TimeOfDay time = value.time;
-    if (_times[dayOfWeek] != null && _times[dayOfWeek]!.contains(time)) {
+    if (_timeMap[dayOfWeek] != null && _timeMap[dayOfWeek]!.contains(time)) {
       return;
     }
     setState(() {
-      _times[dayOfWeek] = [..._times[dayOfWeek] ?? [], time];
+      _timeMap[dayOfWeek] = [..._timeMap[dayOfWeek] ?? [], time];
     });
   }
 }

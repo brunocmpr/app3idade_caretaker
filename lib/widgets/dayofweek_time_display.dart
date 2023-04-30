@@ -15,23 +15,10 @@ class DayOfWeekTimeDisplay extends StatelessWidget {
     if (timeMap.isEmpty) {
       texts = [];
     } else {
-      // texts = timeMap.entries.map((entry) {
-      //   int day = entry.key;
-      //   List<TimeOfDay> times = entry.value;
-      //   List<Widget> timeWidgets = times.map((time) => Text(time.toString())).toList();
-      //   // return Column(
-      //   //   children: [
-      //   //     Text(daysPtBr[day - 1]),
-      //   //     ...timeWidgets,
-      //   //   ],
-      //   // );
-      //   return <Widget>[Text(daysPtBr[day - 1]), ...timeWidgets];
-      // }).reduce((accumulatorList, localList) {
-      //   return [...accumulatorList, ...localList];
-      // });
       texts = timeMap.entries.map((entry) {
         int day = entry.key;
         List<TimeOfDay> times = entry.value;
+        if (times.isEmpty) return const SizedBox();
         List<Widget> timeWidgets = times
             .map((time) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:app3idade_caretaker/models/drug_plan.dart';
+import 'package:app3idade_caretaker/util/util.dart';
 import 'package:flutter/material.dart';
 
 class WeeklyPosologyRegisterPage extends StatefulWidget {
@@ -15,8 +16,6 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
   static const daysPtBr = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
   static const dayOfWeek = 'dayOfWeek';
   static const timeOfDay = 'timeOfDay';
-  final List<DropdownMenuItem<int>> daysDropDownItems =
-      daysPtBr.map((day) => DropdownMenuItem<int>(value: 1 + daysPtBr.indexOf(day), child: Text(day))).toList();
 
   int _getNumberOfTimes() {
     if (_times.isEmpty) return 0;
@@ -40,7 +39,7 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
-                DayOfWeekTime? dayOfWeekTime = await showDayOfWeekTimePicker();
+                DayOfWeekTime? dayOfWeekTime = await showDayOfWeekTimePicker(context);
                 if (dayOfWeekTime == null) return;
                 consumeNewWeeklyTime(dayOfWeekTime);
               },
@@ -56,58 +55,6 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
     );
   }
 
-  Future<DayOfWeekTime?> showDayOfWeekTimePicker() {
-    int selectedDay = 1;
-    TimeOfDay selectedTime = const TimeOfDay(hour: 8, minute: 0);
-    return showModalBottomSheet<DayOfWeekTime>(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 180,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text('Selecione um dia e um horário'),
-                    SizedBox(width: 16),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DropdownButton<int>(
-                      value: selectedDay,
-                      items: daysDropDownItems,
-                      onChanged: (int? value) {
-                        if (value == null) return;
-                        selectedDay = value;
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: () async {
-                        TimeOfDay? timePicked = await showTimePicker(context: context, initialTime: selectedTime);
-                        if (!mounted || timePicked == null) return;
-                        selectedTime = timePicked;
-
-                        DayOfWeekTime valuesPicked = DayOfWeekTime(selectedDay, timePicked);
-                        Navigator.pop(context, valuesPicked);
-                      },
-                      child: const Text('Selecionar horário'),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void consumeNewWeeklyTime(DayOfWeekTime value) {
     int dayOfWeek = value.day;
     TimeOfDay time = value.time;
@@ -118,10 +65,4 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
       _times[dayOfWeek] = [..._times[dayOfWeek] ?? [], time];
     });
   }
-}
-
-class DayOfWeekTime {
-  final int day;
-  final TimeOfDay time;
-  const DayOfWeekTime(this.day, this.time);
 }

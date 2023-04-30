@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/models/weekly_posology.dart';
 import 'package:app3idade_caretaker/util/util.dart';
+import 'package:app3idade_caretaker/widgets/datetime_picker.dart';
 import 'package:app3idade_caretaker/widgets/dayofweek_time.dart';
 import 'package:app3idade_caretaker/widgets/dayofweek_time_display.dart';
 import 'package:app3idade_caretaker/widgets/dayofweek_time_picker.dart';
@@ -16,6 +17,9 @@ class WeeklyPosologyRegisterPage extends StatefulWidget {
 }
 
 class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> {
+  DateTime _startDate = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+  DateTime? _endDate;
   final Map<int, List<TimeOfDay>> _timeMap = {};
 
   void _submit() {}
@@ -63,6 +67,55 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
+            const Text('1. Informe a data de início do uso do medicamento'),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: DateTimePicker(
+                    label: 'Início',
+                    onDateTimeChanged: (dateTime) => setState(() => _startDate =
+                        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Text(formatDateTime(_startDate))
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Text('2. (Opcional) Informe a data de fim do uso do medicamento'),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: DateTimePicker(
+                    label: 'Fim',
+                    onDateTimeChanged: (dateTime) => setState(() => _endDate =
+                        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
+                    firstDate: _endDate ?? _startDate,
+                    initialDate: _endDate ?? _startDate,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Text(_endDate != null ? formatDateTime(_endDate!) : 'Sem data prevista para fim'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: ElevatedButton(
+                    onPressed: _endDate != null ? () => setState(() => _endDate = null) : null,
+                    child: const Text('Descartar'),
+                  ),
+                ),
+                const SizedBox()
+              ],
+            ),
+            const SizedBox(height: 16),
             Text(
                 'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.'),
             const SizedBox(height: 8),

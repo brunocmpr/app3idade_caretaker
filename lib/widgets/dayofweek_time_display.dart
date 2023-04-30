@@ -20,13 +20,18 @@ class DayOfWeekTimeDisplay extends StatelessWidget {
         List<TimeOfDay> times = entry.value;
         if (times.isEmpty) return const SizedBox();
         List<Widget> timeWidgets = times
-            .map((time) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            .map((time) => Column(
                   children: [
-                    Text(time.format(context)),
-                    ElevatedButton(
-                        onPressed: () => onDayOfWeekTimeRemoved(DayOfWeekTime(day, time)),
-                        child: const Text('Remover')),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(time.format(context)),
+                        ElevatedButton(
+                            onPressed: () => onDayOfWeekTimeRemoved(DayOfWeekTime(day, time)),
+                            child: const Text('Remover')),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                   ],
                 ))
             .toList();

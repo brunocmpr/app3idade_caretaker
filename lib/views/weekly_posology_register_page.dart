@@ -80,6 +80,11 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
     });
   }
 
+  bool isReadyToSubmit([int? numberOfTimes]) {
+    numberOfTimes = numberOfTimes ?? _getNumberOfTimes();
+    return (_endDate == null || _startDate.compareTo(_endDate!) < 0) && numberOfTimes > 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> timeComponents = [];
@@ -99,13 +104,13 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
                 SizedBox(
                   width: 120,
                   child: DateTimePicker(
-                    label: 'Início',
+                    label: 'Adicionar',
                     onDateTimeChanged: (dateTime) => setState(() => _startDate =
                         DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
                   ),
                 ),
                 const SizedBox(width: 16),
-                Text(formatDateTime(_startDate))
+                Text('Início: ${formatDateTime(_startDate)}'),
               ],
             ),
             const SizedBox(height: 16),
@@ -116,7 +121,7 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
                 SizedBox(
                   width: 120,
                   child: DateTimePicker(
-                    label: 'Fim',
+                    label: 'Adicionar',
                     onDateTimeChanged: (dateTime) => setState(() => _endDate =
                         DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
                     firstDate: _endDate ?? _startDate,
@@ -124,7 +129,7 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
                   ),
                 ),
                 const SizedBox(width: 16),
-                Text(_endDate != null ? formatDateTime(_endDate!) : 'Sem data prevista para fim'),
+                Text(_endDate != null ? 'Fim: ${formatDateTime(_endDate!)}' : 'Sem data prevista para fim'),
               ],
             ),
             const SizedBox(height: 8),
@@ -140,9 +145,8 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
                 const SizedBox()
               ],
             ),
-            const SizedBox(height: 16),
-            Text(
-                'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.'),
+            const SizedBox(height: 8),
+            const Text('3. Adicione horários semanais'),
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
@@ -152,6 +156,9 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
               },
               child: const Text('Adicionar dia da semana e hora'),
             ),
+            const SizedBox(height: 16),
+            Text(
+                'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.'),
             const SizedBox(height: 8),
             Text(
                 '$numberOfTimes horario${numberOfTimes == 1 ? '' : 's'} semana${numberOfTimes == 1 ? 'l' : 'is'} selecionado${numberOfTimes == 1 ? '' : 's'}:'),
@@ -160,7 +167,7 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
                 timeMap: _timeMap, dayOfWeekNames: daysPtBr, onDayOfWeekTimeRemoved: removeDayOfWeekTime),
             const SizedBox(height: 8),
             Column(children: timeComponents),
-            ElevatedButton(onPressed: numberOfTimes > 0 ? _submit : null, child: const Text('Criar')),
+            ElevatedButton(onPressed: isReadyToSubmit() ? _submit : null, child: const Text('Criar')),
           ],
         ),
       ),

@@ -92,10 +92,12 @@ class CustomPosologyRegisterPageState extends State<CustomPosologyRegisterPage> 
               children: dateComponents,
             ),
             const SizedBox(height: 8),
-            ElevatedButton(onPressed: _dateTimes.isNotEmpty ? _submit : null, child: const Text('Criar'))
+            ElevatedButton(onPressed: isReadyToSubmit ? _submit : null, child: const Text('Criar'))
           ],
         ),
       ),
     );
   }
+
+  bool get isReadyToSubmit => _dateTimes.isNotEmpty;
 }

@@ -107,13 +107,13 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
                   SizedBox(
                     width: 120,
                     child: DateTimePicker(
-                      label: 'Início',
+                      label: 'Adicionar',
                       onDateTimeChanged: (dateTime) => setState(() => _startDate =
                           DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Text(formatDateTime(_startDate))
+                  Text('Início: ${formatDateTime(_startDate)}'),
                 ],
               ),
               const SizedBox(height: 16),
@@ -124,7 +124,7 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
                   SizedBox(
                     width: 120,
                     child: DateTimePicker(
-                      label: 'Fim',
+                      label: 'Adicionar',
                       onDateTimeChanged: (dateTime) => setState(() => _endDate =
                           DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
                       firstDate: _endDate ?? _startDate,
@@ -132,7 +132,7 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Text(_endDate != null ? formatDateTime(_endDate!) : 'Sem data prevista para fim'),
+                  Text(_endDate != null ? 'Fim: ${formatDateTime(_endDate!)}' : 'Sem data prevista para fim'),
                 ],
               ),
               const SizedBox(height: 8),
@@ -183,9 +183,7 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
               Text(planDescription),
               const SizedBox(height: 32),
               ElevatedButton(
-                onPressed: _formKey.currentState != null && _formKey.currentState!.validate() && formStateValid
-                    ? _submit
-                    : null,
+                onPressed: isReadyToSubmit() ? _submit : null,
                 child: const Text('Criar'),
               )
             ],
@@ -194,6 +192,8 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
       ),
     );
   }
+
+  bool isReadyToSubmit() => _formKey.currentState != null && _formKey.currentState!.validate() && formStateValid;
 
   String? _positiveNumberValidator(String? value) {
     if (value == null || value.isEmpty) {

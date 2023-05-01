@@ -15,7 +15,9 @@ class DayOfWeekTimeDisplay extends StatelessWidget {
     if (timeMap.isEmpty) {
       texts = [];
     } else {
-      texts = timeMap.entries.map((entry) {
+      Map<int, List<TimeOfDay>> orderedMap = orderMapKeysAndValues();
+
+      texts = orderedMap.entries.map((entry) {
         int day = entry.key;
         List<TimeOfDay> times = entry.value;
         if (times.isEmpty) return const SizedBox();
@@ -48,5 +50,14 @@ class DayOfWeekTimeDisplay extends StatelessWidget {
     return Column(
       children: texts,
     );
+  }
+
+  Map<int, List<TimeOfDay>> orderMapKeysAndValues() {
+    return Map.fromEntries(timeMap.entries.map((entry) {
+      var sortedList = entry.value.toList()
+        ..sort((a, b) => a.hour != b.hour ? a.hour.compareTo(b.hour) : a.minute.compareTo(b.minute));
+      return MapEntry(entry.key, sortedList);
+    }).toList()
+      ..sort((e1, e2) => e1.key.compareTo(e2.key)));
   }
 }

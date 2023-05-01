@@ -10,7 +10,7 @@ class WeeklyPosologyDateTime {
   int dayOfWeek;
   TimeOfDay time;
 
-  WeeklyPosologyDateTime.newDateTime(this.id, this.dayOfWeek, this.time, [this.weeklyPosology]);
+  WeeklyPosologyDateTime.newDateTime(this.dayOfWeek, this.time, [this.weeklyPosology]);
   WeeklyPosologyDateTime(this.id, this.dayOfWeek, this.time, [this.weeklyPosology]);
 
   Map<String, dynamic> toMap() {

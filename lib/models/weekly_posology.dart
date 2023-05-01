@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/models/weekly_posology_date_time.dart';
 import 'package:app3idade_caretaker/util/util.dart';
-import 'package:flutter/material.dart';
 
 class WeeklyPosology {
   int? id;
-  late DrugPlan? drugPlan;
+  DrugPlan? drugPlan;
   DateTime startDateTime;
   DateTime? endDateTime;
 
@@ -18,7 +17,6 @@ class WeeklyPosology {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'drugPlan': drugPlan!.toMap(),
       'startDateTime': formatDateTime(startDateTime),
       'endDateTime': formatDateTime(endDateTime!),
     };

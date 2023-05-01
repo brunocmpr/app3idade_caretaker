@@ -2,6 +2,9 @@ import 'dart:core';
 
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/models/weekly_posology.dart';
+import 'package:app3idade_caretaker/models/weekly_posology_date_time.dart';
+import 'package:app3idade_caretaker/routes/routes.dart';
+import 'package:app3idade_caretaker/services/drug_plan_service.dart';
 import 'package:app3idade_caretaker/util/util.dart';
 import 'package:app3idade_caretaker/widgets/datetime_picker.dart';
 import 'package:app3idade_caretaker/widgets/dayofweek_time.dart';
@@ -22,7 +25,29 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
   DateTime? _endDate;
   final Map<int, List<TimeOfDay>> _timeMap = {};
 
-  void _submit() {}
+  final _drugPlanService = DrugPlanService();
+
+  Future<void> _submit() async {
+    List<WeeklyPosologyDateTime> weeklyPosologyDateTimes = _timeMap.entries
+        .map((entry) => entry.value.map((times) => WeeklyPosologyDateTime.newDateTime(entry.key, times)))
+        .reduce((accumulator, list) => [...accumulator, ...list])
+        .toList();
+    WeeklyPosology weeklyPosology = WeeklyPosology.newPosology(_startDate, _endDate, weeklyPosologyDateTimes);
+    widget.drugPlan.weeklyPosology = weeklyPosology;
+    try {
+      var navigator = Navigator.of(context);
+      var messenger = ScaffoldMessenger.of(context);
+      await _drugPlanService.createDrugPlan(widget.drugPlan);
+      navigator.popUntil(ModalRoute.withName(Routes.homePage));
+      messenger.showSnackBar(
+        const SnackBar(content: Text("Tratamento criado com sucesso")),
+      );
+    } on Exception catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $exception")),
+      );
+    }
+  }
 
   int _getNumberOfTimes() {
     if (_timeMap.isEmpty) return 0;

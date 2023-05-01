@@ -27,6 +27,10 @@ class CustomPosology {
     return List.generate(maps.length, (i) => CustomPosology.fromMap(maps[i]));
   }
 
+  static List<CustomPosology> fromDynamics(List<dynamic> dynamics) {
+    return fromMaps(dynamics.cast<Map<String, dynamic>>());
+  }
+
   static CustomPosology fromJson(String json) => CustomPosology.fromMap(jsonDecode(json));
 
   String toJson() => jsonEncode(toMap());

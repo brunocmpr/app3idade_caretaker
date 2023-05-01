@@ -101,6 +101,16 @@ class DrugPlanPageState extends State<DrugPlanPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.weekly);
+                    Navigator.pushNamed(context, Routes.createWeeklyPosology, arguments: drugPlan);
+                  }
+                },
+                child: const Text('Registrar cronograma semanal'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
                     var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.custom);
                     Navigator.pushNamed(context, Routes.createCustomPosology, arguments: drugPlan);
                   }

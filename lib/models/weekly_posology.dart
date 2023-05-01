@@ -19,6 +19,7 @@ class WeeklyPosology {
       'id': id,
       'startDateTime': formatDateTime(startDateTime),
       'endDateTime': formatDateTime(endDateTime!),
+      'weeklyPosologyDateTimes': weeklyPosologyDateTimes.map((posology) => posology.toMap()).toList(),
     };
   }
 

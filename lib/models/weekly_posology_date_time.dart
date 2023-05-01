@@ -36,6 +36,10 @@ class WeeklyPosologyDateTime {
     return List.generate(maps.length, (i) => WeeklyPosologyDateTime.fromMap(maps[i]));
   }
 
+  static List<WeeklyPosologyDateTime> fromDynamics(List<dynamic> dynamics) {
+    return fromMaps(dynamics.cast<Map<String, dynamic>>());
+  }
+
   static WeeklyPosologyDateTime fromJson(String json) => WeeklyPosologyDateTime.fromMap(jsonDecode(json));
 
   String toJson() => jsonEncode(toMap());

@@ -39,8 +39,8 @@ class DrugPlan {
     if (map['uniformPosology'] != null) {
       uniformPosology = UniformPosology.fromMap(map['uniformPosology']);
     }
-    if (map['customPosologies'] != null) {
-      customPosologies = CustomPosology.fromJsonList(map['customPosologies']);
+    if (map['customPosology'] != null) {
+      customPosologies = CustomPosology.fromDynamics(map['customPosology'] as List<dynamic>);
     }
     if (map['weeklyPosology'] != null) {
       weeklyPosology = WeeklyPosology.fromMap(map['weeklyPosology']);

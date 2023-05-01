@@ -32,7 +32,7 @@ class WeeklyPosology {
       map['id'] as int,
       DateTime.parse(map['startDateTime']),
       endDateTime,
-      WeeklyPosologyDateTime.fromJsonList(map['weeklyPosologyDateTimes']),
+      WeeklyPosologyDateTime.fromDynamics(map['weeklyPosologyDateTimes']),
     );
   }
 

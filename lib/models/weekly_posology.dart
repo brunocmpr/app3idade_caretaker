@@ -17,8 +17,8 @@ class WeeklyPosology {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'startDateTime': formatDateTime(startDateTime),
-      'endDateTime': formatDateTime(endDateTime!),
+      'startDateTime': startDateTime.toIso8601String(),
+      if (endDateTime != null) 'endDateTime': endDateTime!.toIso8601String(),
       'weeklyPosologyDateTimes': weeklyPosologyDateTimes.map((posology) => posology.toMap()).toList(),
     };
   }

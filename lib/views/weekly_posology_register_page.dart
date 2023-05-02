@@ -93,6 +93,14 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
       appBar: AppBar(
         title: const Text('Novo cronograma semanal'),
       ),
+      floatingActionButton: Visibility(
+        visible: isReadyToSubmit(),
+        child: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: isReadyToSubmit() ? _submit : null,
+          child: const Icon(Icons.done),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
@@ -146,7 +154,7 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
               ],
             ),
             const SizedBox(height: 8),
-            const Text('3. Adicione horários semanais'),
+            const Text('3. Adicione um ou mais horários semanais'),
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
@@ -167,7 +175,6 @@ class WeeklyPosologyRegisterPageState extends State<WeeklyPosologyRegisterPage> 
                 timeMap: _timeMap, dayOfWeekNames: daysPtBr, onDayOfWeekTimeRemoved: removeDayOfWeekTime),
             const SizedBox(height: 8),
             Column(children: timeComponents),
-            ElevatedButton(onPressed: isReadyToSubmit() ? _submit : null, child: const Text('Criar')),
           ],
         ),
       ),

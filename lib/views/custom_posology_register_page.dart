@@ -75,29 +75,37 @@ class CustomPosologyRegisterPageState extends State<CustomPosologyRegisterPage> 
     List<Widget> dateComponents = _dateTimes.map(_buildDateDisplay).toList();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Novo cronograma uniforme'),
+        title: const Text('Novo cronograma customizado'),
+      ),
+      floatingActionButton: Visibility(
+        visible: isReadyToSubmit(),
+        child: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: isReadyToSubmit() ? _submit : null,
+          child: const Icon(Icons.done),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
+            const Text('1. Selecione um ou mais horários'),
+            const SizedBox(height: 16),
+            DateTimePicker(label: 'Adicionar data e hora', onDateTimeChanged: _onDateTimeChanged),
+            const SizedBox(height: 16),
             Text(
                 'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.'),
-            const SizedBox(height: 8),
-            DateTimePicker(label: 'Adicionar data e hora', onDateTimeChanged: _onDateTimeChanged),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Text('${_dateTimes.length} data${_dateTimes.length == 1 ? '' : 's'} selecionadas'),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Column(
               children: dateComponents,
             ),
-            const SizedBox(height: 8),
-            ElevatedButton(onPressed: isReadyToSubmit ? _submit : null, child: const Text('Criar'))
           ],
         ),
       ),
     );
   }
 
-  bool get isReadyToSubmit => _dateTimes.isNotEmpty;
+  bool isReadyToSubmit() => _dateTimes.isNotEmpty;
 }

@@ -26,7 +26,7 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
 
   late TextEditingController _timeLengthController;
 
-  bool isReadyToSubmit() => _formKey.currentState != null && _formKey.currentState!.validate() && formStateValid();
+  bool isReadyToSubmit() => formStateValid();
   bool formStateValid() =>
       _timeLength != null && !_timeLength!.isNegative && (_endDate == null || _startDate.compareTo(_endDate!) < 0);
 

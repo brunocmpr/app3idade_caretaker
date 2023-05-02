@@ -27,25 +27,65 @@ class DrugPlanPageState extends State<DrugPlanPage> {
   @override
   void initState() {
     super.initState();
-    loadData();
+    loadData().then((_) => checkMissingResources(context));
   }
 
-  void loadData() async {
+  Future<void> loadData() async {
     final List<List<Object>> results = await Future.wait([
       patientService.findAll(),
       drugService.findAll(),
     ]);
     setState(() {
       _patients = results[0] as List<Patient>;
-      _selectedPatient = _patients![0];
+      _selectedPatient = _patients != null && _patients!.isNotEmpty ? _patients![0] : null;
       _drugs = results[1] as List<Drug>;
-      _selectedDrug = _drugs![0];
+      _selectedDrug = _drugs != null && _drugs!.isNotEmpty ? _drugs![0] : null;
     });
+  }
+
+  void checkMissingResources(BuildContext context) {
+    if (_patients == null || _patients!.isEmpty) {
+      showResourceMissingDialog(
+          'É necessário registrar ao menos um paciente.', 'Registrar paciente', Routes.createPatient, context);
+    } else if (_drugs == null || _drugs!.isEmpty) {
+      showResourceMissingDialog(
+          'É necessário registrar ao menos um medicamento.', 'Registrar medicamento', Routes.createDrug, context);
+    }
+  }
+
+  Future<void> showResourceMissingDialog(
+      String errorMessage, String okText, String routeToNavigateTo, BuildContext context) async {
+    await showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Atenção'),
+        content: Text(errorMessage),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: const Text('Voltar'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.popAndPushNamed(context, routeToNavigateTo);
+            },
+            child: Text(okText),
+          ),
+        ],
+      ),
+    );
   }
 
   DrugPlan buildDrugPlan(Patient patient, Drug drug, PosologyType type) {
     return DrugPlan.newPlan(patient, drug, type);
   }
+
+  bool get _isFormStateValid => _patients != null && _patients!.isNotEmpty && _drugs != null && _drugs!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -89,32 +129,38 @@ class DrugPlanPageState extends State<DrugPlanPage> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.uniform);
-                    Navigator.pushNamed(context, Routes.createUniformPosology, arguments: drugPlan);
-                  }
-                },
+                onPressed: _isFormStateValid
+                    ? () {
+                        if (_formKey.currentState!.validate()) {
+                          var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.uniform);
+                          Navigator.pushNamed(context, Routes.createUniformPosology, arguments: drugPlan);
+                        }
+                      }
+                    : null,
                 child: const Text('Registrar cronograma uniforme'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.weekly);
-                    Navigator.pushNamed(context, Routes.createWeeklyPosology, arguments: drugPlan);
-                  }
-                },
+                onPressed: _isFormStateValid
+                    ? () {
+                        if (_formKey.currentState!.validate()) {
+                          var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.weekly);
+                          Navigator.pushNamed(context, Routes.createWeeklyPosology, arguments: drugPlan);
+                        }
+                      }
+                    : null,
                 child: const Text('Registrar cronograma semanal'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.custom);
-                    Navigator.pushNamed(context, Routes.createCustomPosology, arguments: drugPlan);
-                  }
-                },
+                onPressed: _isFormStateValid
+                    ? () {
+                        if (_formKey.currentState!.validate()) {
+                          var drugPlan = buildDrugPlan(_selectedPatient!, _selectedDrug!, PosologyType.custom);
+                          Navigator.pushNamed(context, Routes.createCustomPosology, arguments: drugPlan);
+                        }
+                      }
+                    : null,
                 child: const Text('Registrar cronograma customizado'),
               ),
             ],

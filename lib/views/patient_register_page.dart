@@ -72,8 +72,10 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
   }
 
   void _submit(BuildContext context) async {
-    Patient patient = Patient.newPatient(
-        _firstNameController.text.trim(), _lastNameController.text.trim(), _nicknameController.text.trim());
+    String? nickname = _nicknameController.text.trim();
+    nickname = nickname.isNotEmpty ? nickname : null;
+
+    Patient patient = Patient.newPatient(_firstNameController.text.trim(), _lastNameController.text.trim(), nickname);
     try {
       var navigator = Navigator.of(context);
       var messenger = ScaffoldMessenger.of(context);

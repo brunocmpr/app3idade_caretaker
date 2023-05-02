@@ -56,13 +56,22 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
       appBar: AppBar(
         title: const Text('Registrar medicamento'),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            _submit(context);
+          }
+        },
+        child: const Icon(Icons.done),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: <Widget>[
             buildInputRow(_name, _nameController, TextInputType.name, validator: _mandatoryValidator),
-            buildInputRow(_strength, _strengthController, TextInputType.name, validator: _mandatoryValidator),
+            buildInputRow(_strength, _strengthController, TextInputType.name),
             const SizedBox(height: 16.0),
             Row(
               children: <Widget>[

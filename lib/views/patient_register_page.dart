@@ -27,6 +27,15 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
       appBar: AppBar(
         title: const Text('Registrar paciente'),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            _submit(context);
+          }
+        },
+        child: const Icon(Icons.done),
+      ),
       body: Form(
         key: _formKey,
         child: Padding(
@@ -37,15 +46,6 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
               buildInputRow(_firstName, _firstNameController, TextInputType.name, validator: _mandatoryValidator),
               buildInputRow(_lastName, _lastNameController, TextInputType.name, validator: _mandatoryValidator),
               buildInputRow(_nickname, _nicknameController, TextInputType.name),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _submit(context);
-                  }
-                },
-                child: const Text('Cadastrar'),
-              ),
             ],
           ),
         ),

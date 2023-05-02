@@ -94,7 +94,9 @@ class CustomPosologyRegisterPageState extends State<CustomPosologyRegisterPage> 
             DateTimePicker(label: 'Adicionar data e hora', onDateTimeChanged: _onDateTimeChanged),
             const SizedBox(height: 16),
             Text(
-                'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.'),
+              'Tratamento de ${widget.drugPlan.drug.nameAndStrength} para ${widget.drugPlan.patient.preferredName}.',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             Text('${_dateTimes.length} data${_dateTimes.length == 1 ? '' : 's'} selecionadas'),
             const SizedBox(height: 16),

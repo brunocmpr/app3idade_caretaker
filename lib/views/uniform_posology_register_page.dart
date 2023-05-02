@@ -188,8 +188,11 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
                 ],
               ),
               const SizedBox(height: 32),
-              Text(patientAndDrugDescription),
-              Text(planDescription),
+              Text(patientAndDrugDescription, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                planDescription,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),

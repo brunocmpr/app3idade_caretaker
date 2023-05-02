@@ -21,8 +21,8 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   final ImagePicker _imagePicker = ImagePicker();
   List<File> _images = [];
   final _name = 'Nome:';
-  final _strength = 'Strength:';
-  final double _labelWidth = 90;
+  final _strength = 'Dose (ex: 50 mg):';
+  final double _labelWidth = 150;
 
   final DrugService drugService = DrugService();
 
@@ -92,14 +92,6 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
                     });
                   }),
             const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _submit(context);
-                }
-              },
-              child: const Text('Registrar'),
-            ),
           ],
         ),
       ),

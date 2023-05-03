@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:app3idade_caretaker/models/patient.dart';
 import 'package:app3idade_caretaker/services/patient_service.dart';
+import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PatientRegisterPage extends StatefulWidget {
   const PatientRegisterPage({Key? key}) : super(key: key);
@@ -18,6 +22,8 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
   final _lastName = 'Sobrenome:';
   final _nickname = 'Apelido:';
   final double _labelWidth = 90;
+  List<File> _images = [];
+  final ImagePicker _imagePicker = ImagePicker();
 
   final PatientService patientService = PatientService();
 
@@ -46,6 +52,25 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
               buildInputRow(_firstName, _firstNameController, TextInputType.name, validator: _mandatoryValidator),
               buildInputRow(_lastName, _lastNameController, TextInputType.name, validator: _mandatoryValidator),
               buildInputRow(_nickname, _nicknameController, TextInputType.name),
+              const SizedBox(height: 16.0),
+              Row(
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: _selectImages,
+                    child: const Text('Selecione fotos'),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(_images.isNotEmpty ? '${_images.length} imagem(ns) selecionadas' : 'Nenhuma imagem selecionada'),
+                ],
+              ),
+              if (_images.isNotEmpty)
+                SelectedImagesWidget(
+                    images: _images,
+                    onImageRemoved: (index) {
+                      setState(() {
+                        _images.removeAt(index);
+                      });
+                    }),
             ],
           ),
         ),
@@ -79,7 +104,7 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
     try {
       var navigator = Navigator.of(context);
       var messenger = ScaffoldMessenger.of(context);
-      await patientService.createPatient(patient);
+      await patientService.createPatient(patient, _images);
       navigator.pop();
       messenger.showSnackBar(
         const SnackBar(content: Text("Paciente criado com sucesso")),
@@ -96,5 +121,12 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
       return 'Campo obrigatório';
     }
     return null;
+  }
+
+  Future<void> _selectImages() async {
+    final List<XFile> images = await _imagePicker.pickMultiImage();
+    setState(() {
+      _images = images.map((xfile) => File(xfile.path)).toList();
+    });
   }
 }

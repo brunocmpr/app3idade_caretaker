@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app3idade_caretaker/models/patient.dart';
 import 'package:app3idade_caretaker/repository/patient_repository.dart';
 
@@ -8,8 +10,8 @@ class PatientService {
     return patientRepository.deleteById(id);
   }
 
-  Future<Patient> createPatient(Patient user) async {
-    return patientRepository.create(user);
+  Future<Patient> createPatient(Patient user, List<File>? images) async {
+    return patientRepository.create(user, images);
   }
 
   Future<Patient> createUpdateUser(Patient user) async {

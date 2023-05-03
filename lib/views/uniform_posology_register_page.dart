@@ -26,7 +26,8 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
 
   late TextEditingController _timeLengthController;
 
-  bool get formStateValid =>
+  bool isReadyToSubmit() => formStateValid();
+  bool formStateValid() =>
       _timeLength != null && !_timeLength!.isNegative && (_endDate == null || _startDate.compareTo(_endDate!) < 0);
 
   String get patientAndDrugDescription =>
@@ -59,7 +60,7 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
   @override
   Widget build(BuildContext context) {
     String planDescription = 'Favor preencher todos os campos corretamente.';
-    if (_endDate != null && formStateValid) {
+    if (_endDate != null && formStateValid()) {
       int unitMultiplier = 1;
       switch (_timeUnit) {
         case TimeUnit.minute:
@@ -82,7 +83,7 @@ class UniformPosologyRegisterPageState extends State<UniformPosologyRegisterPage
       planDescription =
           '''Serão tomadas $numberDoses doses no total, a cada intervalo de $_timeLength ${_timeUnit.namePtBr()}.
 A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tomada em ${formatDateTime(lastDoseDate)}.''';
-    } else if (formStateValid) {
+    } else if (formStateValid()) {
       planDescription =
           'Inicia em ${formatDateTime(_startDate)}, com doses a cada $_timeLength ${_timeUnit.namePtBr()}, não tendo previsão de fim.';
     }
@@ -92,6 +93,14 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
     return Scaffold(
       appBar: AppBar(
         title: const Text('Novo cronograma uniforme'),
+      ),
+      floatingActionButton: Visibility(
+        visible: isReadyToSubmit(),
+        child: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: isReadyToSubmit() ? _submit : null,
+          child: const Icon(Icons.done),
+        ),
       ),
       body: Form(
         key: _formKey,
@@ -179,21 +188,17 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
                 ],
               ),
               const SizedBox(height: 32),
-              Text(patientAndDrugDescription),
-              Text(planDescription),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: isReadyToSubmit() ? _submit : null,
-                child: const Text('Criar'),
-              )
+              Text(patientAndDrugDescription, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                planDescription,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
-  bool isReadyToSubmit() => _formKey.currentState != null && _formKey.currentState!.validate() && formStateValid;
 
   String? _positiveNumberValidator(String? value) {
     if (value == null || value.isEmpty) {

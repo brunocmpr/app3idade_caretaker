@@ -21,8 +21,8 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   final ImagePicker _imagePicker = ImagePicker();
   List<File> _images = [];
   final _name = 'Nome:';
-  final _strength = 'Strength:';
-  final double _labelWidth = 90;
+  final _strength = 'Dose (ex: 50 mg):';
+  final double _labelWidth = 150;
 
   final DrugService drugService = DrugService();
 
@@ -56,13 +56,22 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
       appBar: AppBar(
         title: const Text('Registrar medicamento'),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            _submit(context);
+          }
+        },
+        child: const Icon(Icons.done),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: <Widget>[
             buildInputRow(_name, _nameController, TextInputType.name, validator: _mandatoryValidator),
-            buildInputRow(_strength, _strengthController, TextInputType.name, validator: _mandatoryValidator),
+            buildInputRow(_strength, _strengthController, TextInputType.name),
             const SizedBox(height: 16.0),
             Row(
               children: <Widget>[
@@ -83,14 +92,6 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
                     });
                   }),
             const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _submit(context);
-                }
-              },
-              child: const Text('Registrar'),
-            ),
           ],
         ),
       ),

@@ -103,7 +103,7 @@ class DrugPlanPageState extends State<DrugPlanPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('Selecione um paciente'),
+              const Text('1. Selecione um paciente'),
               DropdownButtonFormField<Patient>(
                 items: patientDropDownItems,
                 value: _selectedPatient,
@@ -115,7 +115,7 @@ class DrugPlanPageState extends State<DrugPlanPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text('Selecione um medicamento'),
+              const Text('2. Selecione um medicamento'),
               DropdownButtonFormField<Drug>(
                 items: drugDropDownItems,
                 value: _selectedDrug,
@@ -128,6 +128,20 @@ class DrugPlanPageState extends State<DrugPlanPage> {
                 ),
               ),
               const SizedBox(height: 16),
+              const Text('3. Escolha um tipo de cronograma'),
+              const SizedBox(height: 16),
+              Row(
+                children: const [
+                  Icon(Icons.info_outlined),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child:
+                        Text('Cronograma uniforme para que o medicamento tenha que ser tomado em intervalos regulares '
+                            'como a cada 45 minutos, ou a cada 8 horas, ou a cada 2 dias.'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _isFormStateValid
                     ? () {
@@ -137,7 +151,18 @@ class DrugPlanPageState extends State<DrugPlanPage> {
                         }
                       }
                     : null,
-                child: const Text('Registrar cronograma uniforme'),
+                child: const Text('Escolher cronograma uniforme'),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: const [
+                  Icon(Icons.info_outlined),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                        'Cronograma semanal para que o medicamento tenha que ser tomado apenas em certos dias da semana.'),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -149,7 +174,18 @@ class DrugPlanPageState extends State<DrugPlanPage> {
                         }
                       }
                     : null,
-                child: const Text('Registrar cronograma semanal'),
+                child: const Text('Escolher cronograma semanal'),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: const [
+                  Icon(Icons.info_outlined),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child:
+                        Text('Cronograma customizado para que você possa selecionar individualmente datas e horários.'),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -161,7 +197,7 @@ class DrugPlanPageState extends State<DrugPlanPage> {
                         }
                       }
                     : null,
-                child: const Text('Registrar cronograma customizado'),
+                child: const Text('Escolher cronograma customizado'),
               ),
             ],
           ),

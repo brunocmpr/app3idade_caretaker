@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:app3idade_caretaker/models/drug.dart';
 import 'package:app3idade_caretaker/services/drug_service.dart';
+import 'package:app3idade_caretaker/widgets/gallery_camera_picker.dart';
 import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
-// import 'package:app3idade_caretaker/services/drug_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -44,9 +44,15 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   }
 
   Future<void> _selectImages() async {
-    final List<XFile> images = await _imagePicker.pickMultiImage();
+    File? file = await showGalleryCameraPicker(context);
+    if (file == null) return;
+    if (_images.any((fileI) => fileI.path == file.path)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Imagem já adicionada')));
+      return;
+    }
     setState(() {
-      _images = images.map((xfile) => File(xfile.path)).toList();
+      _images.add(file);
     });
   }
 

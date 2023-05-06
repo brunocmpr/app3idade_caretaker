@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 class SelectedImagesWidget extends StatelessWidget {
   final List<File> images;
   final Function(int) onImageRemoved;
+  final bool displayImageCount;
 
-  const SelectedImagesWidget({super.key, required this.images, required this.onImageRemoved});
+  const SelectedImagesWidget(
+      {super.key, required this.images, required this.onImageRemoved, this.displayImageCount = true});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Imagens selecionadas:'),
-        const SizedBox(height: 8.0),
+        if (displayImageCount)
+          Text('Image${images.length != 1 ? 'ns' : 'm'} selecionada${images.length != 1 ? 's' : ''}:'),
+        if (displayImageCount) const SizedBox(height: 8.0),
         Wrap(
           spacing: 8.0,
           runSpacing: 8.0,

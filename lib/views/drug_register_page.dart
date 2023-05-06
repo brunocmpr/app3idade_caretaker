@@ -6,8 +6,6 @@ import 'package:app3idade_caretaker/widgets/gallery_camera_picker.dart';
 import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'package:image_picker/image_picker.dart';
-
 class DrugRegisterPage extends StatefulWidget {
   const DrugRegisterPage({Key? key}) : super(key: key);
   @override
@@ -18,11 +16,11 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _strengthController = TextEditingController();
-  final ImagePicker _imagePicker = ImagePicker();
-  List<File> _images = [];
-  final _name = 'Nome:';
-  final _strength = 'Dose (ex: 50 mg):';
-  final double _labelWidth = 150;
+  final List<File> _images = [];
+  static const _name = 'Nome:';
+  static const _strength = 'Dose (ex: 50 mg):';
+  static const int maxImages = 5;
+  static const double _labelWidth = 150;
 
   final DrugService drugService = DrugService();
 
@@ -44,6 +42,12 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   }
 
   Future<void> _selectImages() async {
+    if (_images.length >= maxImages) {
+      const msg = '${maxImages > 1 ? 'São' : 'É'} permitida ${maxImages > 1 ? 's' : ''} até '
+          '$maxImages foto ${maxImages > 1 ? 's' : ''}';
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(msg)));
+      return;
+    }
     File? file = await showGalleryCameraPicker(context);
     if (file == null) return;
     if (_images.any((fileI) => fileI.path == file.path)) {
@@ -82,7 +86,7 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
             Row(
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _selectImages,
+                  onPressed: _images.length < maxImages ? _selectImages : null,
                   child: const Text('Selecione fotos'),
                 ),
                 const SizedBox(width: 8.0),

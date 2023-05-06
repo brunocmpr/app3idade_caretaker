@@ -5,7 +5,6 @@ import 'package:app3idade_caretaker/services/patient_service.dart';
 import 'package:app3idade_caretaker/widgets/gallery_camera_picker.dart';
 import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class PatientRegisterPage extends StatefulWidget {
   const PatientRegisterPage({Key? key}) : super(key: key);
@@ -19,12 +18,12 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _nicknameController = TextEditingController();
-  final _firstName = 'Nome:';
-  final _lastName = 'Sobrenome:';
-  final _nickname = 'Apelido:';
-  final double _labelWidth = 90;
-  List<File> _images = [];
-  final ImagePicker _imagePicker = ImagePicker();
+  static const _firstName = 'Nome:';
+  static const _lastName = 'Sobrenome:';
+  static const _nickname = 'Apelido:';
+  static const double _labelWidth = 90;
+  static const int maxImages = 1;
+  final List<File> _images = [];
 
   final PatientService patientService = PatientService();
 
@@ -57,21 +56,27 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
               Row(
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: _selectImages,
-                    child: const Text('Selecione fotos'),
+                    onPressed: _images.length < maxImages ? _selectImages : null,
+                    child: const Text('Selecione foto'),
                   ),
                   const SizedBox(width: 8.0),
-                  Text(_images.isNotEmpty ? '${_images.length} imagem(ns) selecionadas' : 'Nenhuma imagem selecionada'),
+                  Text(_images.isNotEmpty
+                      ? '${_images.length} image${_images.length == 1 ? 'm' : 'ns'}'
+                          ' selecionada${_images.length == 1 ? '' : 's'}'
+                      : 'Nenhuma imagem selecionada'),
                 ],
               ),
+              const SizedBox(height: 16),
               if (_images.isNotEmpty)
                 SelectedImagesWidget(
-                    images: _images,
-                    onImageRemoved: (index) {
-                      setState(() {
-                        _images.removeAt(index);
-                      });
-                    }),
+                  images: _images,
+                  displayImageCount: false,
+                  onImageRemoved: (index) {
+                    setState(() {
+                      _images.removeAt(index);
+                    });
+                  },
+                ),
             ],
           ),
         ),
@@ -125,6 +130,12 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
   }
 
   Future<void> _selectImages() async {
+    if (_images.length >= maxImages) {
+      const msg = '${maxImages > 1 ? 'São' : 'É'} permitida ${maxImages > 1 ? 's' : ''} até '
+          '$maxImages foto ${maxImages > 1 ? 's' : ''}';
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(msg)));
+      return;
+    }
     File? file = await showGalleryCameraPicker(context);
     if (file == null) return;
     if (_images.any((fileI) => fileI.path == file.path)) {

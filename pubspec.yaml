@@ -41,6 +41,7 @@ dependencies:
   flutter_secure_storage: ^4.1.0
   image_picker: ^0.8.7+2
   intl: ^0.18.1
+  flutter_quill: ^6.4.4
 
 dev_dependencies:
   flutter_test:

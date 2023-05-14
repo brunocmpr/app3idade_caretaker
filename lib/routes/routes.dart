@@ -4,6 +4,7 @@ import 'package:app3idade_caretaker/views/drug_register_page.dart';
 import 'package:app3idade_caretaker/views/home_page.dart';
 import 'package:app3idade_caretaker/views/login_page.dart';
 import 'package:app3idade_caretaker/views/patient_register_page.dart';
+import 'package:app3idade_caretaker/views/rich_text_page.dart';
 import 'package:app3idade_caretaker/views/uniform_posology_register_page.dart';
 import 'package:app3idade_caretaker/views/user_register_page.dart';
 import 'package:app3idade_caretaker/views/drug_plan_register_page.dart';
@@ -20,6 +21,7 @@ class Routes {
   static const createUniformPosology = '/create_uniform_posology';
   static const createCustomPosology = '/create_custom_posology';
   static const createWeeklyPosology = '/create_weekly_posology';
+  static const richTextEditor = '/rich_text_editor';
 
   static Map<String, Widget Function(BuildContext)> get routes => {
         login: (context) => const LoginPage(),
@@ -43,5 +45,6 @@ class Routes {
           final arguments = ModalRoute.of(context)!.settings.arguments as DrugPlan;
           return WeeklyPosologyRegisterPage(drugPlan: arguments);
         },
+        richTextEditor: (context) => RichTextPage(onInstructionsSaved: (String returno) {})
       };
 }

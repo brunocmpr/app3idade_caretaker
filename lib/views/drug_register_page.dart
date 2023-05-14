@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app3idade_caretaker/models/drug.dart';
+import 'package:app3idade_caretaker/routes/routes.dart';
 import 'package:app3idade_caretaker/services/drug_service.dart';
 import 'package:app3idade_caretaker/widgets/gallery_camera_picker.dart';
 import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
@@ -102,6 +103,10 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
                     });
                   }),
             const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, Routes.richTextEditor),
+              child: const Text('Teste do editor Rich Text'),
+            )
           ],
         ),
       ),

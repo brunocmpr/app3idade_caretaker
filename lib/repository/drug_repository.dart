@@ -14,6 +14,7 @@ class DrugRepository {
   Future<Drug> create(Drug drug, List<File>? images) async {
     var request = http.MultipartRequest('POST', Uri.http(API.url, baseUri));
     request.headers.addAll(API.headerAuthorization);
+    request.headers.addAll(API.headerContentTypeJson);
 
     request.fields['drugForm'] = drug.toJson();
 

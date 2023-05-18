@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app3idade_caretaker/models/drug.dart';
+import 'package:app3idade_caretaker/routes/routes.dart';
 import 'package:app3idade_caretaker/services/drug_service.dart';
 import 'package:app3idade_caretaker/widgets/gallery_camera_picker.dart';
 import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
@@ -17,6 +18,7 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _strengthController = TextEditingController();
   final List<File> _images = [];
+  String? _instructions;
   static const _name = 'Nome:';
   static const _strength = 'Dose (ex: 50 mg):';
   static const int maxImages = 5;
@@ -25,7 +27,7 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
   final DrugService drugService = DrugService();
 
   void _submit(BuildContext context) async {
-    Drug drug = Drug.newDrug(_nameController.text.trim(), _strengthController.text.trim());
+    Drug drug = Drug.newDrug(_nameController.text.trim(), _strengthController.text.trim(), _instructions);
     try {
       var navigator = Navigator.of(context);
       var messenger = ScaffoldMessenger.of(context);
@@ -102,6 +104,16 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
                     });
                   }),
             const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () async {
+                String? richText =
+                    await Navigator.pushNamed(context, Routes.richTextEditor, arguments: _instructions) as String?;
+                setState(() {
+                  _instructions = richText;
+                });
+              },
+              child: const Text('Adicionar texto de instruções'),
+            )
           ],
         ),
       ),

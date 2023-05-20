@@ -6,6 +6,7 @@ import 'package:app3idade_caretaker/services/drug_service.dart';
 import 'package:app3idade_caretaker/widgets/gallery_camera_picker.dart';
 import 'package:app3idade_caretaker/widgets/selected_images_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 
 class DrugRegisterPage extends StatefulWidget {
   const DrugRegisterPage({Key? key}) : super(key: key);
@@ -104,16 +105,45 @@ class _DrugRegisterPageState extends State<DrugRegisterPage> {
                     });
                   }),
             const SizedBox(height: 16.0),
+            const Text('Instruções:'),
             ElevatedButton(
               onPressed: () async {
                 String? richText =
                     await Navigator.pushNamed(context, Routes.richTextEditor, arguments: _instructions) as String?;
-                setState(() {
-                  _instructions = richText;
-                });
+                if (richText != null) {
+                  setState(() => _instructions = richText);
+                }
               },
               child: const Text('Adicionar texto de instruções'),
-            )
+            ),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () async {
+                String? richText =
+                    await Navigator.pushNamed(context, Routes.richTextEditor, arguments: _instructions) as String?;
+                if (richText != null) {
+                  setState(() => _instructions = richText);
+                }
+              },
+              child: IgnorePointer(
+                ignoring: true,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade400, width: 2.0),
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                  child: QuillHtmlEditor(
+                    text: _instructions ?? '',
+                    hintText: 'Adicione instruções aqui!',
+                    controller: QuillEditorController(),
+                    isEnabled: false,
+                    minHeight: 150,
+                    hintTextAlign: TextAlign.start,
+                    padding: const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

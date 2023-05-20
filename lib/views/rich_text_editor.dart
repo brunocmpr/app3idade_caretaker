@@ -70,7 +70,7 @@ class _RichTextEditorState extends State<RichTextEditor> {
           Expanded(
             child: QuillHtmlEditor(
               text: widget.initialHtml,
-              hintText: 'Digite aqui!',
+              hintText: 'Digite aqui, e use as opções acima para personalizar o texto!',
               controller: _controller,
               isEnabled: true,
               minHeight: 300,

@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _authService.getToken().then((token) {
       if (token != null && token.isNotEmpty) {
-        Navigator.of(context).pushNamed(Routes.homePage, arguments: token);
+        Navigator.of(context).pushReplacementNamed(Routes.homePage, arguments: token);
       }
     });
   }

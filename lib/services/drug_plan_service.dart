@@ -7,4 +7,8 @@ class DrugPlanService {
   Future<DrugPlan> createDrugPlan(DrugPlan drugPlan) {
     return drugPlanRepository.createDrugPLan(drugPlan);
   }
+
+  Future<List<DrugPlan>> findAll() {
+    return drugPlanRepository.findAll();
+  }
 }

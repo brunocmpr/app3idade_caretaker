@@ -26,4 +26,18 @@ class DrugPlanRepository {
       throw Exception('Erro inserindo usuário: ${response.body}');
     }
   }
+
+  Future<List<DrugPlan>> findAll() async {
+    final http.Response response = await http.get(
+      Uri.http(API.url, baseUri),
+      headers: API.headerAuthorization,
+    );
+    if (API.isSuccessResponse(response)) {
+      return DrugPlan.fromJsonList(utf8.decode(response.bodyBytes));
+    } else if (API.isUnauthorizedOrForbiddenResponse(response)) {
+      throw UnauthorizedException(utf8.decode(response.bodyBytes));
+    } else {
+      throw Exception('Erro buscando todos os usuários.');
+    }
+  }
 }

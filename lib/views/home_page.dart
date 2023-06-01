@@ -35,23 +35,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _loadData() {
-    drugService.findAll().then((drugs) {
-      setState(() {
-        _drugs = drugs;
-      });
-    });
+    _loadDrugs();
+    _loadPatients();
+    _loadDrugPlans();
+  }
 
-    patientService.findAll().then((patients) {
-      setState(() {
-        _patients = patients;
-      });
+  Future<void> _loadDrugPlans() async {
+    final drugPlans = await drugPlanService.findAll();
+    setState(() {
+      _drugPlans = drugPlans;
     });
+  }
 
-    drugPlanService.findAll().then((drugPlans) {
-      setState(() {
-        _drugPlans = drugPlans;
-      });
+  Future<void> _loadPatients() async {
+    final patients = await patientService.findAll();
+    setState(() {
+      _patients = patients;
     });
+  }
+
+  Future<void> _loadDrugs() async {
+    final drugs = await drugService.findAll();
+    setState(() {
+      _drugs = drugs;
+    });
+  }
+
+  _loadSelectedEntityType() async {
+    var loadMethod = [_loadDrugPlans, _loadDrugs, _loadPatients][_selectedDestinationIndex];
+    await loadMethod();
   }
 
   @override
@@ -103,17 +115,17 @@ class _HomePageState extends State<HomePage> {
       body: <Widget>[
         Column(
           children: [
-            DrugPlanListView(_drugPlans),
+            DrugPlanListView(_drugPlans, refreshRequested: (_) async => await _loadSelectedEntityType()),
           ],
         ),
         Column(
           children: [
-            DrugListView(_drugs),
+            DrugListView(_drugs, refreshRequested: (_) async => await _loadSelectedEntityType()),
           ],
         ),
         Column(
           children: [
-            PatientListView(_patients),
+            PatientListView(_patients, refreshRequested: (_) async => await _loadSelectedEntityType()),
           ],
         )
       ][_selectedDestinationIndex],
@@ -123,7 +135,8 @@ class _HomePageState extends State<HomePage> {
 
 class PatientListView extends StatelessWidget {
   final List<Patient>? _patients;
-  const PatientListView(this._patients, {Key? key}) : super(key: key);
+  final ValueChanged<void> refreshRequested;
+  const PatientListView(this._patients, {Key? key, required this.refreshRequested}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -133,32 +146,35 @@ class PatientListView extends StatelessWidget {
       return const Expanded(child: Center(child: Text('Nenhum paciente cadastrado.')));
     }
     return Expanded(
-      child: ListView.builder(
-        itemCount: _patients?.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(_patients![index].preferredName),
-              trailing: PopupMenuButton(
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: Text('Editar'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Text('Excluir'),
-                  ),
-                ],
-                onSelected: (value) {
-                  if (value == 'edit') {
-                    // Navigator.of(context).pushNamed(Routes.editPatient, arguments: _patients![index]);
-                  } else if (value == 'delete') {}
-                },
+      child: RefreshIndicator(
+        onRefresh: () async => refreshRequested(null),
+        child: ListView.builder(
+          itemCount: _patients?.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                title: Text(_patients![index].preferredName),
+                trailing: PopupMenuButton(
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Editar'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Excluir'),
+                    ),
+                  ],
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      // Navigator.of(context).pushNamed(Routes.editPatient, arguments: _patients![index]);
+                    } else if (value == 'delete') {}
+                  },
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -166,7 +182,8 @@ class PatientListView extends StatelessWidget {
 
 class DrugPlanListView extends StatelessWidget {
   final List<DrugPlan>? _drugPlans;
-  const DrugPlanListView(this._drugPlans, {Key? key}) : super(key: key);
+  final ValueChanged<void> refreshRequested;
+  const DrugPlanListView(this._drugPlans, {Key? key, required this.refreshRequested}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     if (_drugPlans == null) {
@@ -175,33 +192,36 @@ class DrugPlanListView extends StatelessWidget {
       return const Expanded(child: Center(child: Text('Nenhum paciente cadastrado.')));
     }
     return Expanded(
-      child: ListView.builder(
-        itemCount: _drugPlans?.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(_drugPlans![index].drug.name),
-              subtitle: Text(_drugPlans![index].patient.preferredName),
-              trailing: PopupMenuButton(
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: Text('Editar'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Text('Excluir'),
-                  ),
-                ],
-                onSelected: (value) {
-                  if (value == 'edit') {
-                    // Navigator.of(context).pushNamed(Routes.editDrugPlan, arguments: _drugPlans![index]);
-                  } else if (value == 'delete') {}
-                },
+      child: RefreshIndicator(
+        onRefresh: () async => refreshRequested(null),
+        child: ListView.builder(
+          itemCount: _drugPlans?.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                title: Text(_drugPlans![index].drug.name),
+                subtitle: Text(_drugPlans![index].patient.preferredName),
+                trailing: PopupMenuButton(
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Editar'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Excluir'),
+                    ),
+                  ],
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      // Navigator.of(context).pushNamed(Routes.editDrugPlan, arguments: _drugPlans![index]);
+                    } else if (value == 'delete') {}
+                  },
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -209,7 +229,8 @@ class DrugPlanListView extends StatelessWidget {
 
 class DrugListView extends StatelessWidget {
   final List<Drug>? _drugs;
-  const DrugListView(this._drugs, {Key? key}) : super(key: key);
+  final ValueChanged<void> refreshRequested;
+  const DrugListView(this._drugs, {Key? key, required this.refreshRequested}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -219,33 +240,36 @@ class DrugListView extends StatelessWidget {
       return const Expanded(child: Center(child: Text('Nenhum medicamento cadastrado.')));
     }
     return Expanded(
-      child: ListView.builder(
-        itemCount: _drugs?.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(_drugs![index].name),
-              subtitle: Text(_drugs![index].strength),
-              trailing: PopupMenuButton(
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: Text('Editar'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Text('Excluir'),
-                  ),
-                ],
-                onSelected: (value) {
-                  if (value == 'edit') {
-                    // Navigator.of(context).pushNamed(Routes.editDrug, arguments: _drugs![index]);
-                  } else if (value == 'delete') {}
-                },
+      child: RefreshIndicator(
+        onRefresh: () async => refreshRequested(null),
+        child: ListView.builder(
+          itemCount: _drugs?.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                title: Text(_drugs![index].name),
+                subtitle: Text(_drugs![index].strength),
+                trailing: PopupMenuButton(
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Editar'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Excluir'),
+                    ),
+                  ],
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      // Navigator.of(context).pushNamed(Routes.editDrug, arguments: _drugs![index]);
+                    } else if (value == 'delete') {}
+                  },
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

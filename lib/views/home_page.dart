@@ -89,14 +89,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_selectedDestinationIndex == 0) {
-            Navigator.pushNamed(context, Routes.createBaseDrugPlan);
-          } else if (_selectedDestinationIndex == 1) {
-            Navigator.pushNamed(context, Routes.createDrug);
-          } else if (_selectedDestinationIndex == 2) {
-            Navigator.pushNamed(context, Routes.createPatient);
-          }
+        onPressed: () async {
+          var createEntityAndReturn = [
+            () => Navigator.pushNamed(context, Routes.createBaseDrugPlan),
+            () => Navigator.pushNamed(context, Routes.createDrug),
+            () => Navigator.pushNamed(context, Routes.createPatient)
+          ][_selectedDestinationIndex];
+          await createEntityAndReturn();
+          _loadData();
         },
         child: const Icon(Icons.add),
       ),

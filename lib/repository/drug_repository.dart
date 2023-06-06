@@ -56,4 +56,20 @@ class DrugRepository {
       throw Exception('Erro buscando todos os medicamentos.');
     }
   }
+
+  Future<Drug> deleteById(int id) async {
+    final headers = API.headerAuthorization;
+
+    final http.Response response = await http.delete(
+      Uri.http(API.url, baseUri, {'id': '$id'}),
+      headers: headers,
+    );
+    if (API.isSuccessResponse(response)) {
+      return Drug.fromJson(response.body);
+    } else if (API.isUnauthorizedOrForbiddenResponse(response)) {
+      throw UnauthorizedException(utf8.decode(response.bodyBytes));
+    } else {
+      throw Exception('Erro removendo medicamento: $id.');
+    }
+  }
 }

@@ -173,7 +173,7 @@ class PatientListView extends StatelessWidget {
                       value: 'delete',
                       onTap: () async {
                         var messenger = ScaffoldMessenger.of(context);
-                        await patientService.deleteUserById(_patients![index].id!);
+                        await patientService.deletePatientById(_patients![index].id!);
                         refreshRequested(null);
                         messenger.showSnackBar(
                           const SnackBar(content: Text("Paciente removido com sucesso.")),
@@ -226,9 +226,17 @@ class DrugPlanListView extends StatelessWidget {
                       value: 'edit',
                       child: Text('Editar'),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'delete',
-                      child: Text('Excluir'),
+                      onTap: () async {
+                        var messenger = ScaffoldMessenger.of(context);
+                        await drugPlanService.deleteById(_drugPlans![index].id!);
+                        refreshRequested(null);
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text("Tratamento removido com sucesso.")),
+                        );
+                      },
+                      child: const Text('Excluir'),
                     ),
                   ],
                   onSelected: (value) {
@@ -276,9 +284,17 @@ class DrugListView extends StatelessWidget {
                       value: 'edit',
                       child: Text('Editar'),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'delete',
-                      child: Text('Excluir'),
+                      onTap: () async {
+                        var messenger = ScaffoldMessenger.of(context);
+                        await drugService.deleteDrugById(_drugs![index].id!);
+                        refreshRequested(null);
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text("Medicamento removido com sucesso.")),
+                        );
+                      },
+                      child: const Text('Excluir'),
                     ),
                   ],
                   onSelected: (value) {

@@ -11,4 +11,8 @@ class DrugPlanService {
   Future<List<DrugPlan>> findAll() {
     return drugPlanRepository.findAll();
   }
+
+  Future<DrugPlan> deleteById(int id) async {
+    return drugPlanRepository.delete(id);
+  }
 }

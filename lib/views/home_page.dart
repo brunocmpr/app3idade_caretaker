@@ -61,11 +61,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  _loadSelectedEntityType() async {
-    var loadMethod = [_loadDrugPlans, _loadDrugs, _loadPatients][_selectedDestinationIndex];
-    await loadMethod();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,17 +110,29 @@ class _HomePageState extends State<HomePage> {
       body: <Widget>[
         Column(
           children: [
-            DrugPlanListView(_drugPlans, refreshRequested: (_) async => await _loadSelectedEntityType()),
+            DrugPlanListView(
+              _drugPlans,
+              refreshRequested: (_) => _loadData(),
+              drugPlanService: drugPlanService,
+            ),
           ],
         ),
         Column(
           children: [
-            DrugListView(_drugs, refreshRequested: (_) async => await _loadSelectedEntityType()),
+            DrugListView(
+              _drugs,
+              refreshRequested: (_) => _loadData(),
+              drugService: drugService,
+            ),
           ],
         ),
         Column(
           children: [
-            PatientListView(_patients, refreshRequested: (_) async => await _loadSelectedEntityType()),
+            PatientListView(
+              _patients,
+              refreshRequested: (_) => _loadData(),
+              patientService: patientService,
+            ),
           ],
         )
       ][_selectedDestinationIndex],
@@ -136,7 +143,9 @@ class _HomePageState extends State<HomePage> {
 class PatientListView extends StatelessWidget {
   final List<Patient>? _patients;
   final ValueChanged<void> refreshRequested;
-  const PatientListView(this._patients, {Key? key, required this.refreshRequested}) : super(key: key);
+  final PatientService patientService;
+  const PatientListView(this._patients, {Key? key, required this.refreshRequested, required this.patientService})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +169,17 @@ class PatientListView extends StatelessWidget {
                       value: 'edit',
                       child: Text('Editar'),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'delete',
-                      child: Text('Excluir'),
+                      onTap: () async {
+                        var messenger = ScaffoldMessenger.of(context);
+                        await patientService.deleteUserById(_patients![index].id!);
+                        refreshRequested(null);
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text("Paciente removido com sucesso.")),
+                        );
+                      },
+                      child: const Text('Excluir'),
                     ),
                   ],
                   onSelected: (value) {
@@ -183,7 +200,9 @@ class PatientListView extends StatelessWidget {
 class DrugPlanListView extends StatelessWidget {
   final List<DrugPlan>? _drugPlans;
   final ValueChanged<void> refreshRequested;
-  const DrugPlanListView(this._drugPlans, {Key? key, required this.refreshRequested}) : super(key: key);
+  final DrugPlanService drugPlanService;
+  const DrugPlanListView(this._drugPlans, {Key? key, required this.refreshRequested, required this.drugPlanService})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     if (_drugPlans == null) {
@@ -230,7 +249,9 @@ class DrugPlanListView extends StatelessWidget {
 class DrugListView extends StatelessWidget {
   final List<Drug>? _drugs;
   final ValueChanged<void> refreshRequested;
-  const DrugListView(this._drugs, {Key? key, required this.refreshRequested}) : super(key: key);
+  final DrugService drugService;
+  const DrugListView(this._drugs, {Key? key, required this.refreshRequested, required this.drugService})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

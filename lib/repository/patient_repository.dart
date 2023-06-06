@@ -88,11 +88,10 @@ class PatientRepository {
   }
 
   Future<Patient> deleteById(int id) async {
-    final headers = API.headerContentTypeJson;
-    headers.addAll(API.headerAuthorization);
+    final headers = API.headerAuthorization;
 
     final http.Response response = await http.delete(
-      Uri.http(API.url, '$baseUri/$id'),
+      Uri.http(API.url, baseUri, {'id': '$id'}),
       headers: headers,
     );
     if (API.isSuccessResponse(response)) {

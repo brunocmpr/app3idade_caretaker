@@ -182,9 +182,14 @@ class PatientListView extends StatelessWidget {
                       child: const Text('Excluir'),
                     ),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == 'edit') {
-                      // Navigator.of(context).pushNamed(Routes.editPatient, arguments: _patients![index]);
+                      var messenger = ScaffoldMessenger.of(context);
+                      await Navigator.of(context).pushNamed(Routes.updatePatient, arguments: _patients![index].id!);
+                      refreshRequested(null);
+                      messenger.showSnackBar(
+                        const SnackBar(content: Text("Paciente editado com sucesso.")),
+                      );
                     } else if (value == 'delete') {}
                   },
                 ),

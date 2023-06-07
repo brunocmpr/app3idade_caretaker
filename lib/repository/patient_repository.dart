@@ -70,7 +70,7 @@ class PatientRepository {
   }
 
   Future<Patient> update(Patient patient, List<File>? images) async {
-    var request = http.MultipartRequest('PUT', Uri.http(API.url, baseUri));
+    var request = http.MultipartRequest('PUT', Uri.http(API.url, '$baseUri/${patient.id}'));
     request.headers.addAll(API.headerAuthorization);
 
     request.fields['form'] = patient.toJson();

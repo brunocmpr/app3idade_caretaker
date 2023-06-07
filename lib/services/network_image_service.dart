@@ -26,7 +26,7 @@ class NetworkImageService {
 
     List<Future<File?>> futures = imageIds.map((id) async {
       String imageUrl = buildFullUrl(id);
-      var response = await http.get(Uri.parse(imageUrl));
+      var response = await http.get(Uri.parse(imageUrl), headers: API.headerAuthorization);
       if (API.isSuccessResponse(response)) {
         String filename = 'image_$id.jpg';
         File file = File('${tempDir.path}/$filename');

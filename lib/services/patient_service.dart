@@ -14,7 +14,7 @@ class PatientService {
     return patientRepository.findAll();
   }
 
-  Future<Patient> createPatient(Patient user, List<File>? images) async {
+  Future<Patient> create(Patient user, List<File>? images) async {
     return patientRepository.create(user, images);
   }
 
@@ -22,7 +22,7 @@ class PatientService {
     return patientRepository.update(user);
   }
 
-  Future<Patient> deletePatientById(int id) async {
+  Future<Patient> deleteById(int id) async {
     return patientRepository.deleteById(id);
   }
 }

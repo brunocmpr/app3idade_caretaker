@@ -110,7 +110,7 @@ class PatientRegisterPageState extends State<PatientRegisterPage> {
     try {
       var navigator = Navigator.of(context);
       var messenger = ScaffoldMessenger.of(context);
-      await patientService.createPatient(patient, _images);
+      await patientService.create(patient, _images);
       navigator.pop();
       messenger.showSnackBar(
         const SnackBar(content: Text("Paciente criado com sucesso")),

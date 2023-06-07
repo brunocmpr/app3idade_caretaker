@@ -173,7 +173,7 @@ class PatientListView extends StatelessWidget {
                       value: 'delete',
                       onTap: () async {
                         var messenger = ScaffoldMessenger.of(context);
-                        await patientService.deletePatientById(_patients![index].id!);
+                        await patientService.deleteById(_patients![index].id!);
                         refreshRequested(null);
                         messenger.showSnackBar(
                           const SnackBar(content: Text("Paciente removido com sucesso.")),

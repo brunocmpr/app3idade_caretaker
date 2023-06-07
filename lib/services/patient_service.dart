@@ -7,7 +7,7 @@ class PatientService {
   PatientRepository patientRepository = PatientRepository();
 
   Future<Patient> findById(int id) async {
-    return patientRepository.deleteById(id);
+    return patientRepository.findById(id);
   }
 
   Future<List<Patient>> findAll() {

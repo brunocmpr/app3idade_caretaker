@@ -18,8 +18,8 @@ class PatientService {
     return patientRepository.create(user, images);
   }
 
-  Future<Patient> updatePatient(Patient user) async {
-    return patientRepository.update(user);
+  Future<Patient> update(Patient user, List<File>? images) async {
+    return patientRepository.update(user, images);
   }
 
   Future<Patient> deleteById(int id) async {

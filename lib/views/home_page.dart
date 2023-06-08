@@ -184,12 +184,8 @@ class PatientListView extends StatelessWidget {
                   ],
                   onSelected: (value) async {
                     if (value == 'edit') {
-                      var messenger = ScaffoldMessenger.of(context);
                       await Navigator.of(context).pushNamed(Routes.updatePatient, arguments: _patients![index].id!);
                       refreshRequested(null);
-                      messenger.showSnackBar(
-                        const SnackBar(content: Text("Paciente editado com sucesso.")),
-                      );
                     } else if (value == 'delete') {}
                   },
                 ),
@@ -302,9 +298,10 @@ class DrugListView extends StatelessWidget {
                       child: const Text('Excluir'),
                     ),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == 'edit') {
-                      // Navigator.of(context).pushNamed(Routes.editDrug, arguments: _drugs![index]);
+                      await Navigator.of(context).pushNamed(Routes.updateDrug, arguments: _drugs![index].id!);
+                      refreshRequested(null);
                     } else if (value == 'delete') {}
                   },
                 ),

@@ -1,6 +1,7 @@
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/views/custom_posology_register_page.dart';
 import 'package:app3idade_caretaker/views/drug_register_page.dart';
+import 'package:app3idade_caretaker/views/drug_update_page.dart';
 import 'package:app3idade_caretaker/views/home_page.dart';
 import 'package:app3idade_caretaker/views/login_page.dart';
 import 'package:app3idade_caretaker/views/patient_register_page.dart';
@@ -19,6 +20,7 @@ class Routes {
   static const createPatient = '/create_patient';
   static const updatePatient = '/update_patient';
   static const createDrug = '/create_drug';
+  static const updateDrug = '/update_drug';
   static const createBaseDrugPlan = '/create_base_posology';
   static const createUniformPosology = '/create_uniform_posology';
   static const createCustomPosology = '/create_custom_posology';
@@ -38,6 +40,10 @@ class Routes {
           return PatientUpdatePage(patientId: arguments);
         },
         createDrug: (context) => const DrugRegisterPage(),
+        updateDrug: (context) {
+          final arguments = ModalRoute.of(context)!.settings.arguments as int;
+          return DrugUpdatePage(drugId: arguments);
+        },
         createBaseDrugPlan: (context) => const DrugPlanPage(),
         createUniformPosology: (context) {
           final arguments = ModalRoute.of(context)!.settings.arguments as DrugPlan;

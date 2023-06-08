@@ -17,4 +17,12 @@ class DrugService {
   Future<Drug> deleteDrugById(int id) async {
     return drugRepository.deleteById(id);
   }
+
+  Future<Drug> findById(int id) async {
+    return drugRepository.findById(id);
+  }
+
+  Future<Drug> update(Drug drug, List<File>? images) {
+    return drugRepository.update(drug, images);
+  }
 }

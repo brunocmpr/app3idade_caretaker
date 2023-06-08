@@ -43,6 +43,38 @@ class DrugRepository {
     }
   }
 
+  Future<Drug> update(Drug drug, List<File>? images) async {
+    var request = http.MultipartRequest('PUT', Uri.http(API.url, '$baseUri/${drug.id}'));
+    request.headers.addAll(API.headerAuthorization);
+    request.headers.addAll(API.headerContentTypeJson);
+
+    request.fields['drugForm'] = drug.toJson();
+
+    if (images != null) {
+      for (int i = 0; i < images.length && i < 4; i++) {
+        final file = await images[i].readAsBytes();
+        final fileExtension = images[i].path.split('/').last.split('.').last;
+        //TODO provide MediaType for http.MultipartFile.fromBytes
+        request.files.add(http.MultipartFile.fromBytes('images', file, filename: 'image$i.$fileExtension'));
+      }
+    }
+
+    StreamedResponse response = await request.send();
+    var responseBytes = await response.stream.toBytes();
+    var responseString = utf8.decode(responseBytes);
+
+    if (API.isSuccessResponse(response)) {
+      var responseMap = jsonDecode(responseString);
+      return Drug.fromMap(responseMap);
+    } else if (API.isUnauthorizedOrForbiddenResponse(response)) {
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      throw UnauthorizedException(responseString);
+    } else {
+      throw Exception('Erro inserindo medicamento: $responseString');
+    }
+  }
+
   Future<List<Drug>> findAll() async {
     final http.Response response = await http.get(
       Uri.http(API.url, baseUri),
@@ -70,6 +102,20 @@ class DrugRepository {
       throw UnauthorizedException(utf8.decode(response.bodyBytes));
     } else {
       throw Exception('Erro removendo medicamento: $id.');
+    }
+  }
+
+  Future<Drug> findById(int id) async {
+    final http.Response response = await http.get(
+      Uri.http(API.url, '$baseUri/$id'),
+      headers: API.headerAuthorization,
+    );
+    if (API.isSuccessResponse(response)) {
+      return Drug.fromJson(API.responseBodyToJson(response));
+    } else if (API.isUnauthorizedOrForbiddenResponse(response)) {
+      throw UnauthorizedException(utf8.decode(response.bodyBytes));
+    } else {
+      throw Exception('Erro buscando medicamento: $id [code: ${response.statusCode}]');
     }
   }
 }

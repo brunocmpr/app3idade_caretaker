@@ -176,7 +176,7 @@ class PatientUpdatePageState extends State<PatientUpdatePage> {
       await patientService.update(_patient, _images);
       navigator.pop();
       messenger.showSnackBar(
-        const SnackBar(content: Text("Paciente criado com sucesso")),
+        const SnackBar(content: Text("Paciente atualizado com sucesso")),
       );
     } on Exception catch (exception) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -31,6 +31,9 @@ class CustomPosology {
     return fromMaps(dynamics.cast<Map<String, dynamic>>());
   }
 
+  static toJsonList(List<CustomPosology> customPosologies) =>
+      jsonEncode(customPosologies.map((e) => e.toMap()).toList());
+
   static CustomPosology fromJson(String json) => CustomPosology.fromMap(jsonDecode(json));
 
   String toJson() => jsonEncode(toMap());

@@ -1,5 +1,6 @@
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/views/custom_posology_register_page.dart';
+import 'package:app3idade_caretaker/views/custom_posology_update_page.dart';
 import 'package:app3idade_caretaker/views/drug_register_page.dart';
 import 'package:app3idade_caretaker/views/drug_update_page.dart';
 import 'package:app3idade_caretaker/views/home_page.dart';
@@ -24,6 +25,7 @@ class Routes {
   static const createBaseDrugPlan = '/create_base_posology';
   static const createUniformPosology = '/create_uniform_posology';
   static const createCustomPosology = '/create_custom_posology';
+  static const updateCustomPosology = '/update_custom_posology';
   static const createWeeklyPosology = '/create_weekly_posology';
   static const richTextEditor = '/rich_text_editor';
 
@@ -43,6 +45,10 @@ class Routes {
         updateDrug: (context) {
           final arguments = ModalRoute.of(context)!.settings.arguments as int;
           return DrugUpdatePage(drugId: arguments);
+        },
+        updateCustomPosology: (context) {
+          final arguments = ModalRoute.of(context)!.settings.arguments as int;
+          return CustomPosologyUpdatePage(drugPlanId: arguments);
         },
         createBaseDrugPlan: (context) => const DrugPlanPage(),
         createUniformPosology: (context) {

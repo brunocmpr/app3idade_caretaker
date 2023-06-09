@@ -243,9 +243,22 @@ class DrugPlanListView extends StatelessWidget {
                       child: const Text('Excluir'),
                     ),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == 'edit') {
-                      // Navigator.of(context).pushNamed(Routes.editDrugPlan, arguments: _drugPlans![index]);
+                      switch (_drugPlans![index].type) {
+                        case PosologyType.uniform:
+                          // TODO: Handle this case.
+                          break;
+                        case PosologyType.weekly:
+                          // TODO: Handle this case.
+                          break;
+                        case PosologyType.custom:
+                          await Navigator.of(context)
+                              .pushNamed(Routes.updateCustomPosology, arguments: _drugPlans![index].id!);
+                          break;
+                      }
+
+                      refreshRequested(null);
                     } else if (value == 'delete') {}
                   },
                 ),

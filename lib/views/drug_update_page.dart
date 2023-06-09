@@ -121,74 +121,92 @@ class _DrugUpdatePageState extends State<DrugUpdatePage> {
         },
         child: const Icon(Icons.done),
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: <Widget>[
-            buildInputRow(_name, _nameController, TextInputType.name, validator: _mandatoryValidator),
-            buildInputRow(_strength, _strengthController, TextInputType.name),
-            const SizedBox(height: 16.0),
-            Row(
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: _images.length < maxImages ? _selectImages : null,
-                  child: const Text('Selecione fotos'),
-                ),
-                const SizedBox(width: 8.0),
-                Text(_images.isNotEmpty ? '${_images.length} imagem(ns) selecionadas' : 'Nenhuma imagem selecionada'),
-              ],
-            ),
-            if (_images.isNotEmpty)
-              SelectedImagesWidget(
-                  images: _images,
-                  onImageRemoved: (index) {
-                    setState(() {
-                      _images.removeAt(index);
-                    });
-                  }),
-            const SizedBox(height: 16.0),
-            const Text('Instruções:'),
-            ElevatedButton(
-              onPressed: () async {
-                String? richText =
-                    await Navigator.pushNamed(context, Routes.richTextEditor, arguments: _instructions) as String?;
-                if (richText != null) {
-                  setState(() => _instructions = richText);
-                }
-              },
-              child: const Text('Adicionar texto de instruções'),
-            ),
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () async {
-                String? richText =
-                    await Navigator.pushNamed(context, Routes.richTextEditor, arguments: _instructions) as String?;
-                if (richText != null) {
-                  setState(() => _instructions = richText);
-                }
-              },
-              child: IgnorePointer(
-                ignoring: true,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400, width: 2.0),
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                  child: QuillHtmlEditor(
-                    text: _instructions ?? '',
-                    hintText: 'Adicione instruções aqui!',
-                    controller: QuillEditorController(),
-                    isEnabled: false,
-                    minHeight: 150,
-                    hintTextAlign: TextAlign.start,
-                    padding: const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
-                  ),
+      body: Stack(
+        children: [
+          AbsorbPointer(
+            absorbing: _isLoading,
+            child: Opacity(
+              opacity: _isLoading ? 0.5 : 1.0,
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(16.0),
+                  children: <Widget>[
+                    buildInputRow(_name, _nameController, TextInputType.name, validator: _mandatoryValidator),
+                    buildInputRow(_strength, _strengthController, TextInputType.name),
+                    const SizedBox(height: 16.0),
+                    Row(
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: _images.length < maxImages ? _selectImages : null,
+                          child: const Text('Selecione fotos'),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Text(_images.isNotEmpty
+                            ? '${_images.length} imagem(ns) selecionadas'
+                            : 'Nenhuma imagem selecionada'),
+                      ],
+                    ),
+                    if (_images.isNotEmpty)
+                      SelectedImagesWidget(
+                          images: _images,
+                          onImageRemoved: (index) {
+                            setState(() {
+                              _images.removeAt(index);
+                            });
+                          }),
+                    const SizedBox(height: 16.0),
+                    const Text('Instruções:'),
+                    ElevatedButton(
+                      onPressed: () async {
+                        String? richText =
+                            await Navigator.pushNamed(context, Routes.richTextEditor, arguments: _instructions)
+                                as String?;
+                        if (richText != null) {
+                          setState(() => _instructions = richText);
+                        }
+                      },
+                      child: const Text('Adicionar texto de instruções'),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        String? richText =
+                            await Navigator.pushNamed(context, Routes.richTextEditor, arguments: _instructions)
+                                as String?;
+                        if (richText != null) {
+                          setState(() => _instructions = richText);
+                        }
+                      },
+                      child: IgnorePointer(
+                        ignoring: true,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade400, width: 2.0),
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: QuillHtmlEditor(
+                            text: _instructions ?? '',
+                            hintText: 'Adicione instruções aqui!',
+                            controller: QuillEditorController(),
+                            isEnabled: false,
+                            minHeight: 150,
+                            hintTextAlign: TextAlign.start,
+                            padding: const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }

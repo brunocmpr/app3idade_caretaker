@@ -115,6 +115,7 @@ class _HomePageState extends State<HomePage> {
               refreshRequested: (_) => _loadData(),
               drugPlanService: drugPlanService,
             ),
+            const SizedBox(height: 50),
           ],
         ),
         Column(
@@ -124,6 +125,7 @@ class _HomePageState extends State<HomePage> {
               refreshRequested: (_) => _loadData(),
               drugService: drugService,
             ),
+            const SizedBox(height: 50),
           ],
         ),
         Column(
@@ -133,6 +135,7 @@ class _HomePageState extends State<HomePage> {
               refreshRequested: (_) => _loadData(),
               patientService: patientService,
             ),
+            const SizedBox(height: 50),
           ],
         )
       ][_selectedDestinationIndex],

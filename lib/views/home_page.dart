@@ -247,7 +247,8 @@ class DrugPlanListView extends StatelessWidget {
                     if (value == 'edit') {
                       switch (_drugPlans![index].type) {
                         case PosologyType.uniform:
-                          // TODO: Handle this case.
+                          await Navigator.of(context)
+                              .pushNamed(Routes.updateUniformPosology, arguments: _drugPlans![index].id!);
                           break;
                         case PosologyType.weekly:
                           // TODO: Handle this case.

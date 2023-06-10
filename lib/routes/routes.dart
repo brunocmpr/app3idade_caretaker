@@ -9,6 +9,7 @@ import 'package:app3idade_caretaker/views/patient_register_page.dart';
 import 'package:app3idade_caretaker/views/patient_update_page.dart';
 import 'package:app3idade_caretaker/views/rich_text_editor.dart';
 import 'package:app3idade_caretaker/views/uniform_posology_register_page.dart';
+import 'package:app3idade_caretaker/views/uniform_posology_update.page.dart';
 import 'package:app3idade_caretaker/views/user_register_page.dart';
 import 'package:app3idade_caretaker/views/drug_plan_register_page.dart';
 import 'package:app3idade_caretaker/views/weekly_posology_register_page.dart';
@@ -24,6 +25,7 @@ class Routes {
   static const updateDrug = '/update_drug';
   static const createBaseDrugPlan = '/create_base_posology';
   static const createUniformPosology = '/create_uniform_posology';
+  static const updateUniformPosology = '/update_uniform_posology';
   static const createCustomPosology = '/create_custom_posology';
   static const updateCustomPosology = '/update_custom_posology';
   static const createWeeklyPosology = '/create_weekly_posology';
@@ -54,6 +56,10 @@ class Routes {
         createUniformPosology: (context) {
           final arguments = ModalRoute.of(context)!.settings.arguments as DrugPlan;
           return UniformPosologyRegisterPage(drugPlan: arguments);
+        },
+        updateUniformPosology: (context) {
+          final arguments = ModalRoute.of(context)!.settings.arguments as int;
+          return UniformPosologyUpdatePage(drugPlanId: arguments);
         },
         createCustomPosology: (context) {
           final arguments = ModalRoute.of(context)!.settings.arguments as DrugPlan;

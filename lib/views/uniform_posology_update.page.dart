@@ -126,100 +126,114 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
           child: const Icon(Icons.done),
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text('1. Informe a data de início do uso do medicamento'),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    child: DateTimePicker(
-                      label: 'Adicionar',
-                      onDateTimeChanged: (dateTime) => setState(() => _startDate =
-                          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
-                    ),
+      body: Stack(
+        children: [
+          AbsorbPointer(
+            absorbing: _isLoading,
+            child: Opacity(
+              opacity: _isLoading ? 0.5 : 1,
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text('1. Informe a data de início do uso do medicamento'),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            child: DateTimePicker(
+                              label: 'Adicionar',
+                              onDateTimeChanged: (dateTime) => setState(() => _startDate = DateTime(
+                                  dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Text('Início: ${formatDateTime(_startDate)}'),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('2. (Opcional) Informe a data de fim do uso do medicamento'),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            child: DateTimePicker(
+                              label: 'Adicionar',
+                              onDateTimeChanged: (dateTime) => setState(() => _endDate = DateTime(
+                                  dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
+                              firstDate: _endDate ?? _startDate,
+                              initialDate: _endDate ?? _startDate,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Text(_endDate != null ? 'Fim: ${formatDateTime(_endDate!)}' : 'Sem data prevista para fim'),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            child: ElevatedButton(
+                              onPressed: _endDate != null ? () => setState(() => _endDate = null) : null,
+                              child: const Text('Descartar'),
+                            ),
+                          ),
+                          const SizedBox()
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('3. Informe a cada quanto tempo o medicamento deve ser tomado:'),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _timeLengthController,
+                              validator: _positiveNumberValidator,
+                              onChanged: (String? value) {
+                                if (value == null || int.tryParse(value) == null) {
+                                  return;
+                                }
+                                setState(() => _timeLength = (int.parse(value)));
+                              },
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: DropdownButtonFormField<TimeUnit>(
+                              value: _timeUnit,
+                              items: dropdownTimeUnitItems,
+                              onChanged: (unit) => setState(() {
+                                _timeUnit = unit ?? _timeUnit;
+                              }),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      Text(patientAndDrugDescription, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(
+                        planDescription,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 16),
-                  Text('Início: ${formatDateTime(_startDate)}'),
-                ],
+                ),
               ),
-              const SizedBox(height: 16),
-              const Text('2. (Opcional) Informe a data de fim do uso do medicamento'),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    child: DateTimePicker(
-                      label: 'Adicionar',
-                      onDateTimeChanged: (dateTime) => setState(() => _endDate =
-                          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
-                      firstDate: _endDate ?? _startDate,
-                      initialDate: _endDate ?? _startDate,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(_endDate != null ? 'Fim: ${formatDateTime(_endDate!)}' : 'Sem data prevista para fim'),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    child: ElevatedButton(
-                      onPressed: _endDate != null ? () => setState(() => _endDate = null) : null,
-                      child: const Text('Descartar'),
-                    ),
-                  ),
-                  const SizedBox()
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Text('3. Informe a cada quanto tempo o medicamento deve ser tomado:'),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _timeLengthController,
-                      validator: _positiveNumberValidator,
-                      onChanged: (String? value) {
-                        if (value == null || int.tryParse(value) == null) {
-                          return;
-                        }
-                        setState(() => _timeLength = (int.parse(value)));
-                      },
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: DropdownButtonFormField<TimeUnit>(
-                      value: _timeUnit,
-                      items: dropdownTimeUnitItems,
-                      onChanged: (unit) => setState(() {
-                        _timeUnit = unit ?? _timeUnit;
-                      }),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 32),
-              Text(patientAndDrugDescription, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(
-                planDescription,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
+            ),
           ),
-        ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }

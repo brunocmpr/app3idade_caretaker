@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bem vindo ao Terceira Idade Fácil!'),
+        title: const Text('Terceira Idade Fácil!'),
         actions: [
           IconButton(
             onPressed: () {

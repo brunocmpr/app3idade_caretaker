@@ -131,84 +131,98 @@ class WeeklyPosologyUpdatePageState extends State<WeeklyPosologyUpdatePage> {
           child: const Icon(Icons.done),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            const Text('1. Informe a data de início do uso do medicamento'),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                SizedBox(
-                  width: 120,
-                  child: DateTimePicker(
-                    label: 'Adicionar',
-                    onDateTimeChanged: (dateTime) => setState(() => _startDate =
-                        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
-                  ),
+      body: Stack(
+        children: [
+          AbsorbPointer(
+            absorbing: _isLoading,
+            child: Opacity(
+              opacity: _isLoading ? 0.5 : 1.0,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: ListView(
+                  children: [
+                    const Text('1. Informe a data de início do uso do medicamento'),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          child: DateTimePicker(
+                            label: 'Adicionar',
+                            onDateTimeChanged: (dateTime) => setState(() => _startDate =
+                                DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Text('Início: ${formatDateTime(_startDate)}'),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('2. (Opcional) Informe a data de fim do uso do medicamento'),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          child: DateTimePicker(
+                            label: 'Adicionar',
+                            onDateTimeChanged: (dateTime) => setState(() => _endDate =
+                                DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
+                            firstDate: _endDate ?? _startDate,
+                            initialDate: _endDate ?? _startDate,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Text(_endDate != null ? 'Fim: ${formatDateTime(_endDate!)}' : 'Sem data prevista para fim'),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          child: ElevatedButton(
+                            onPressed: _endDate != null ? () => setState(() => _endDate = null) : null,
+                            child: const Text('Descartar'),
+                          ),
+                        ),
+                        const SizedBox()
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    const Text('3. Adicione um ou mais horários semanais'),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () async {
+                        DayOfWeekTime? dayOfWeekTime = await showDayOfWeekTimePicker(context, daysPtBr);
+                        if (dayOfWeekTime == null) return;
+                        assignNewWeeklyTime(dayOfWeekTime);
+                      },
+                      child: const Text('Adicionar dia da semana e hora'),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Tratamento de ${_drugPlan?.drug.nameAndStrength} para ${_drugPlan?.patient.preferredName}.',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                        '$numberOfTimes horario${numberOfTimes == 1 ? '' : 's'} semana${numberOfTimes == 1 ? 'l' : 'is'} selecionado${numberOfTimes == 1 ? '' : 's'}:'),
+                    const SizedBox(height: 8),
+                    DayOfWeekTimeDisplay(
+                        timeMap: _timeMap, dayOfWeekNames: daysPtBr, onDayOfWeekTimeRemoved: removeDayOfWeekTime),
+                    const SizedBox(height: 8),
+                    Column(children: timeComponents),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Text('Início: ${formatDateTime(_startDate)}'),
-              ],
+              ),
             ),
-            const SizedBox(height: 16),
-            const Text('2. (Opcional) Informe a data de fim do uso do medicamento'),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                SizedBox(
-                  width: 120,
-                  child: DateTimePicker(
-                    label: 'Adicionar',
-                    onDateTimeChanged: (dateTime) => setState(() => _endDate =
-                        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute)),
-                    firstDate: _endDate ?? _startDate,
-                    initialDate: _endDate ?? _startDate,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Text(_endDate != null ? 'Fim: ${formatDateTime(_endDate!)}' : 'Sem data prevista para fim'),
-              ],
+          ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                SizedBox(
-                  width: 120,
-                  child: ElevatedButton(
-                    onPressed: _endDate != null ? () => setState(() => _endDate = null) : null,
-                    child: const Text('Descartar'),
-                  ),
-                ),
-                const SizedBox()
-              ],
-            ),
-            const SizedBox(height: 8),
-            const Text('3. Adicione um ou mais horários semanais'),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () async {
-                DayOfWeekTime? dayOfWeekTime = await showDayOfWeekTimePicker(context, daysPtBr);
-                if (dayOfWeekTime == null) return;
-                assignNewWeeklyTime(dayOfWeekTime);
-              },
-              child: const Text('Adicionar dia da semana e hora'),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Tratamento de ${_drugPlan?.drug.nameAndStrength} para ${_drugPlan?.patient.preferredName}.',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-                '$numberOfTimes horario${numberOfTimes == 1 ? '' : 's'} semana${numberOfTimes == 1 ? 'l' : 'is'} selecionado${numberOfTimes == 1 ? '' : 's'}:'),
-            const SizedBox(height: 8),
-            DayOfWeekTimeDisplay(
-                timeMap: _timeMap, dayOfWeekNames: daysPtBr, onDayOfWeekTimeRemoved: removeDayOfWeekTime),
-            const SizedBox(height: 8),
-            Column(children: timeComponents),
-          ],
-        ),
+        ],
       ),
     );
   }

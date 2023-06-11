@@ -25,4 +25,4 @@ const Map<int, String> dayMap = {
   7: 'SUNDAY'
 };
 
-const daysPtBr = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const daysPtBr = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];

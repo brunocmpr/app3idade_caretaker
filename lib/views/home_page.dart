@@ -212,7 +212,7 @@ class DrugPlanListView extends StatelessWidget {
     if (_drugPlans == null) {
       return const Expanded(child: Center(child: CircularProgressIndicator()));
     } else if (_drugPlans!.isEmpty) {
-      return const Expanded(child: Center(child: Text('Nenhum paciente cadastrado.')));
+      return const Expanded(child: Center(child: Text('Nenhum tratamento cadastrado.')));
     }
     return Expanded(
       child: RefreshIndicator(
@@ -251,7 +251,8 @@ class DrugPlanListView extends StatelessWidget {
                               .pushNamed(Routes.updateUniformPosology, arguments: _drugPlans![index].id!);
                           break;
                         case PosologyType.weekly:
-                          // TODO: Handle this case.
+                          await Navigator.of(context)
+                              .pushNamed(Routes.updateWeeklyPosology, arguments: _drugPlans![index].id!);
                           break;
                         case PosologyType.custom:
                           await Navigator.of(context)

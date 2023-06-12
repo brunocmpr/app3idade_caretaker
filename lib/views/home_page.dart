@@ -1,6 +1,7 @@
 import 'package:app3idade_caretaker/models/drug.dart';
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/models/patient.dart';
+import 'package:app3idade_caretaker/models/uniform_posology.dart';
 import 'package:app3idade_caretaker/routes/routes.dart';
 import 'package:app3idade_caretaker/services/auth_service.dart';
 import 'package:app3idade_caretaker/services/drug_plan_service.dart';
@@ -207,6 +208,19 @@ class DrugPlanListView extends StatelessWidget {
   final DrugPlanService drugPlanService;
   const DrugPlanListView(this._drugPlans, {Key? key, required this.refreshRequested, required this.drugPlanService})
       : super(key: key);
+
+  String briefDescription(DrugPlan plan) {
+    switch (plan.type) {
+      case PosologyType.uniform:
+        return 'Tratamento uniforme - Doses a cada ${plan.uniformPosology!.timeLength}'
+            ' ${TimeUnitPtBr.map[plan.uniformPosology!.timeUnit]}';
+      case PosologyType.weekly:
+        return 'Tratamento semanal - ${plan.weeklyPosology!.weeklyPosologyDateTimes.length} doses semanais';
+      case PosologyType.custom:
+        return 'Tratamento customizado - ${plan.customPosologies!.length} doses';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_drugPlans == null) {
@@ -222,8 +236,9 @@ class DrugPlanListView extends StatelessWidget {
           itemBuilder: (context, index) {
             return Card(
               child: ListTile(
-                title: Text(_drugPlans![index].drug.name),
-                subtitle: Text(_drugPlans![index].patient.preferredName),
+                title: Text(_drugPlans![index].drug.nameAndStrength),
+                subtitle: Text('${_drugPlans![index].patient.preferredName}\n${briefDescription(_drugPlans![index])}'),
+                isThreeLine: true,
                 trailing: PopupMenuButton(
                   itemBuilder: (context) => [
                     const PopupMenuItem(

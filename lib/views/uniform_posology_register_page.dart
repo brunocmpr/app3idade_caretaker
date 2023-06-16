@@ -106,8 +106,7 @@ A primeira dose ocorrerá em ${formatDateTime(_startDate)} e a última será tom
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: [
               const Text('1. Informe a data de início do uso do medicamento'),
               const SizedBox(height: 8),

@@ -110,7 +110,7 @@ class _DrugUpdatePageState extends State<DrugUpdatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registrar medicamento'),
+        title: const Text('Editar medicamento'),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,

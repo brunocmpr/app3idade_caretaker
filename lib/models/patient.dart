@@ -5,8 +5,9 @@ class Patient {
   String firstName;
   String lastName;
   String? nickname;
+  List<int>? imageIds;
 
-  Patient(this.id, this.firstName, this.lastName, [this.nickname]);
+  Patient(this.id, this.firstName, this.lastName, [this.nickname, this.imageIds]);
   Patient.newPatient(this.firstName, this.lastName, [this.nickname]);
 
   String get preferredName => nickname ?? '$firstName $lastName';
@@ -21,6 +22,7 @@ class Patient {
       map['firstName'],
       map['lastName'],
       map['nickname'],
+      (map['imageIds'] as List<dynamic>).map((imageId) => imageId as int).toList(),
     );
   }
 

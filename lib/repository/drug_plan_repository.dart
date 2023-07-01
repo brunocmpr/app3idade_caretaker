@@ -56,4 +56,21 @@ class DrugPlanRepository {
       throw Exception('Erro removendo medicamento: $id.');
     }
   }
+
+  findById(int drugPlanId) async {
+    var uri = Uri.http(API.url, '$baseUri/$drugPlanId');
+    print(uri);
+
+    final http.Response response = await http.get(
+      Uri.http(API.url, '$baseUri/$drugPlanId'),
+      headers: API.headerAuthorization,
+    );
+    if (API.isSuccessResponse(response)) {
+      return DrugPlan.fromJson(utf8.decode(response.bodyBytes));
+    } else if (API.isUnauthorizedOrForbiddenResponse(response)) {
+      throw UnauthorizedException(utf8.decode(response.bodyBytes));
+    } else {
+      throw Exception('Erro buscando medicamento: $drugPlanId.');
+    }
+  }
 }

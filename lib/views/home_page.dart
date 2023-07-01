@@ -1,6 +1,7 @@
 import 'package:app3idade_caretaker/models/drug.dart';
 import 'package:app3idade_caretaker/models/drug_plan.dart';
 import 'package:app3idade_caretaker/models/patient.dart';
+import 'package:app3idade_caretaker/models/uniform_posology.dart';
 import 'package:app3idade_caretaker/routes/routes.dart';
 import 'package:app3idade_caretaker/services/auth_service.dart';
 import 'package:app3idade_caretaker/services/drug_plan_service.dart';
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bem vindo ao Terceira Idade Fácil!'),
+        title: const Text('Terceira Idade Fácil!'),
         actions: [
           IconButton(
             onPressed: () {
@@ -115,6 +116,7 @@ class _HomePageState extends State<HomePage> {
               refreshRequested: (_) => _loadData(),
               drugPlanService: drugPlanService,
             ),
+            const SizedBox(height: 50),
           ],
         ),
         Column(
@@ -124,6 +126,7 @@ class _HomePageState extends State<HomePage> {
               refreshRequested: (_) => _loadData(),
               drugService: drugService,
             ),
+            const SizedBox(height: 50),
           ],
         ),
         Column(
@@ -133,6 +136,7 @@ class _HomePageState extends State<HomePage> {
               refreshRequested: (_) => _loadData(),
               patientService: patientService,
             ),
+            const SizedBox(height: 50),
           ],
         )
       ][_selectedDestinationIndex],
@@ -173,7 +177,7 @@ class PatientListView extends StatelessWidget {
                       value: 'delete',
                       onTap: () async {
                         var messenger = ScaffoldMessenger.of(context);
-                        await patientService.deletePatientById(_patients![index].id!);
+                        await patientService.deleteById(_patients![index].id!);
                         refreshRequested(null);
                         messenger.showSnackBar(
                           const SnackBar(content: Text("Paciente removido com sucesso.")),
@@ -182,9 +186,10 @@ class PatientListView extends StatelessWidget {
                       child: const Text('Excluir'),
                     ),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == 'edit') {
-                      // Navigator.of(context).pushNamed(Routes.editPatient, arguments: _patients![index]);
+                      await Navigator.of(context).pushNamed(Routes.updatePatient, arguments: _patients![index].id!);
+                      refreshRequested(null);
                     } else if (value == 'delete') {}
                   },
                 ),
@@ -203,12 +208,25 @@ class DrugPlanListView extends StatelessWidget {
   final DrugPlanService drugPlanService;
   const DrugPlanListView(this._drugPlans, {Key? key, required this.refreshRequested, required this.drugPlanService})
       : super(key: key);
+
+  String briefDescription(DrugPlan plan) {
+    switch (plan.type) {
+      case PosologyType.uniform:
+        return 'Tratamento uniforme - Doses a cada ${plan.uniformPosology!.timeLength}'
+            ' ${TimeUnitPtBr.map[plan.uniformPosology!.timeUnit]}';
+      case PosologyType.weekly:
+        return 'Tratamento semanal - ${plan.weeklyPosology!.weeklyPosologyDateTimes.length} doses semanais';
+      case PosologyType.custom:
+        return 'Tratamento customizado - ${plan.customPosologies!.length} doses';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_drugPlans == null) {
       return const Expanded(child: Center(child: CircularProgressIndicator()));
     } else if (_drugPlans!.isEmpty) {
-      return const Expanded(child: Center(child: Text('Nenhum paciente cadastrado.')));
+      return const Expanded(child: Center(child: Text('Nenhum tratamento cadastrado.')));
     }
     return Expanded(
       child: RefreshIndicator(
@@ -218,8 +236,9 @@ class DrugPlanListView extends StatelessWidget {
           itemBuilder: (context, index) {
             return Card(
               child: ListTile(
-                title: Text(_drugPlans![index].drug.name),
-                subtitle: Text(_drugPlans![index].patient.preferredName),
+                title: Text(_drugPlans![index].drug.nameAndStrength),
+                subtitle: Text('${_drugPlans![index].patient.preferredName}\n${briefDescription(_drugPlans![index])}'),
+                isThreeLine: true,
                 trailing: PopupMenuButton(
                   itemBuilder: (context) => [
                     const PopupMenuItem(
@@ -239,9 +258,24 @@ class DrugPlanListView extends StatelessWidget {
                       child: const Text('Excluir'),
                     ),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == 'edit') {
-                      // Navigator.of(context).pushNamed(Routes.editDrugPlan, arguments: _drugPlans![index]);
+                      switch (_drugPlans![index].type) {
+                        case PosologyType.uniform:
+                          await Navigator.of(context)
+                              .pushNamed(Routes.updateUniformPosology, arguments: _drugPlans![index].id!);
+                          break;
+                        case PosologyType.weekly:
+                          await Navigator.of(context)
+                              .pushNamed(Routes.updateWeeklyPosology, arguments: _drugPlans![index].id!);
+                          break;
+                        case PosologyType.custom:
+                          await Navigator.of(context)
+                              .pushNamed(Routes.updateCustomPosology, arguments: _drugPlans![index].id!);
+                          break;
+                      }
+
+                      refreshRequested(null);
                     } else if (value == 'delete') {}
                   },
                 ),
@@ -297,9 +331,10 @@ class DrugListView extends StatelessWidget {
                       child: const Text('Excluir'),
                     ),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == 'edit') {
-                      // Navigator.of(context).pushNamed(Routes.editDrug, arguments: _drugs![index]);
+                      await Navigator.of(context).pushNamed(Routes.updateDrug, arguments: _drugs![index].id!);
+                      refreshRequested(null);
                     } else if (value == 'delete') {}
                   },
                 ),

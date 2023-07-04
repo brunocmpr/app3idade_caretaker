@@ -75,6 +75,27 @@ class _DrugUpdatePageState extends State<DrugUpdatePage> {
     try {
       var navigator = Navigator.of(context);
       var messenger = ScaffoldMessenger.of(context);
+      bool? operationConfirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Atenção'),
+          content: const Text('Confirma atualização do medicamento?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Sim'),
+            ),
+          ],
+        ),
+      );
+      if (operationConfirmed == null || !operationConfirmed) return;
+      setState(() {
+        _isLoading = true;
+      });
       await drugService.update(_drug, _images);
       navigator.pop();
       messenger.showSnackBar(
@@ -84,6 +105,10 @@ class _DrugUpdatePageState extends State<DrugUpdatePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erro: $exception")),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

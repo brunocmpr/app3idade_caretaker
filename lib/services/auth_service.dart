@@ -46,8 +46,7 @@ class AuthService {
     return token != null && token.isNotEmpty;
   }
 
-  Future<void> logoutAndGoToLogin(BuildContext context) async {
-    var navigator = Navigator.of(context);
+  Future<void> logoutAndGoToLogin(NavigatorState navigator) async {
     await _clearToken();
     navigator.pushNamedAndRemoveUntil(Routes.login, (route) => false);
   }

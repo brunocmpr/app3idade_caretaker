@@ -67,6 +67,27 @@ class WeeklyPosologyUpdatePageState extends State<WeeklyPosologyUpdatePage> {
 
       var navigator = Navigator.of(context);
       var messenger = ScaffoldMessenger.of(context);
+      bool? operationConfirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Atenção'),
+          content: const Text('Confirma atualização do cronograma?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Sim'),
+            ),
+          ],
+        ),
+      );
+      if (operationConfirmed == null || !operationConfirmed) return;
+      setState(() {
+        _isLoading = true;
+      });
       await weeklyPosologyService.update(_drugPlan!);
       navigator.popUntil(ModalRoute.withName(Routes.homePage));
       messenger.showSnackBar(
@@ -76,6 +97,10 @@ class WeeklyPosologyUpdatePageState extends State<WeeklyPosologyUpdatePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erro: $exception")),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

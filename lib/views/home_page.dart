@@ -69,8 +69,27 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Terceira Idade Fácil!'),
         actions: [
           IconButton(
-            onPressed: () {
-              authService.logoutAndGoToLogin(context);
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+              bool? operationConfirmed = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Atenção'),
+                  content: const Text('Deseja realmente sair do Terceira Idade Fácil?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Não'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Sim'),
+                    ),
+                  ],
+                ),
+              );
+              if (operationConfirmed == null || !operationConfirmed) return;
+              authService.logoutAndGoToLogin(navigator);
             },
             icon: const Icon(Icons.logout),
           ),
@@ -173,24 +192,42 @@ class PatientListView extends StatelessWidget {
                       value: 'edit',
                       child: Text('Editar'),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'delete',
-                      onTap: () async {
-                        var messenger = ScaffoldMessenger.of(context);
-                        await patientService.deleteById(_patients![index].id!);
-                        refreshRequested(null);
-                        messenger.showSnackBar(
-                          const SnackBar(content: Text("Paciente removido com sucesso.")),
-                        );
-                      },
-                      child: const Text('Excluir'),
+                      child: Text('Excluir'),
                     ),
                   ],
                   onSelected: (value) async {
                     if (value == 'edit') {
                       await Navigator.of(context).pushNamed(Routes.updatePatient, arguments: _patients![index].id!);
                       refreshRequested(null);
-                    } else if (value == 'delete') {}
+                    } else if (value == 'delete') {
+                      var messenger = ScaffoldMessenger.of(context);
+                      bool? operationConfirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Atenção'),
+                          content: Text('Deseja realmente remover o paciente ${_patients![index].preferredName}?'
+                              ' A ação também removerá todos os tratamentos associados ao paciente.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Não'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Sim'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (operationConfirmed == null || !operationConfirmed) return;
+                      await patientService.deleteById(_patients![index].id!);
+                      refreshRequested(null);
+                      messenger.showSnackBar(
+                        const SnackBar(content: Text("Paciente removido com sucesso.")),
+                      );
+                    }
                   },
                 ),
               ),
@@ -245,17 +282,9 @@ class DrugPlanListView extends StatelessWidget {
                       value: 'edit',
                       child: Text('Editar'),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'delete',
-                      onTap: () async {
-                        var messenger = ScaffoldMessenger.of(context);
-                        await drugPlanService.deleteById(_drugPlans![index].id!);
-                        refreshRequested(null);
-                        messenger.showSnackBar(
-                          const SnackBar(content: Text("Tratamento removido com sucesso.")),
-                        );
-                      },
-                      child: const Text('Excluir'),
+                      child: Text('Excluir'),
                     ),
                   ],
                   onSelected: (value) async {
@@ -276,7 +305,34 @@ class DrugPlanListView extends StatelessWidget {
                       }
 
                       refreshRequested(null);
-                    } else if (value == 'delete') {}
+                    } else if (value == 'delete') {
+                      var messenger = ScaffoldMessenger.of(context);
+                      bool? operationConfirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Atenção'),
+                          content: Text('Deseja realmente remover o tratamento de ${_drugPlans![index].drug.name}'
+                              ' para ${_drugPlans![index].patient.preferredName}?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Não'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Sim'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (operationConfirmed == null || !operationConfirmed) return;
+                      await drugPlanService.deleteById(_drugPlans![index].id!);
+
+                      refreshRequested(null);
+                      messenger.showSnackBar(
+                        const SnackBar(content: Text("Tratamento removido com sucesso.")),
+                      );
+                    }
                   },
                 ),
               ),
@@ -318,24 +374,42 @@ class DrugListView extends StatelessWidget {
                       value: 'edit',
                       child: Text('Editar'),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'delete',
-                      onTap: () async {
-                        var messenger = ScaffoldMessenger.of(context);
-                        await drugService.deleteDrugById(_drugs![index].id!);
-                        refreshRequested(null);
-                        messenger.showSnackBar(
-                          const SnackBar(content: Text("Medicamento removido com sucesso.")),
-                        );
-                      },
-                      child: const Text('Excluir'),
+                      child: Text('Excluir'),
                     ),
                   ],
                   onSelected: (value) async {
                     if (value == 'edit') {
                       await Navigator.of(context).pushNamed(Routes.updateDrug, arguments: _drugs![index].id!);
                       refreshRequested(null);
-                    } else if (value == 'delete') {}
+                    } else if (value == 'delete') {
+                      var messenger = ScaffoldMessenger.of(context);
+                      bool? operationConfirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Atenção'),
+                          content: Text('Deseja realmente remover o medicamento ${_drugs![index].nameAndStrength}?'
+                              ' A ação também removerá todos os tratamentos que usem o medicamento.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Não'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Sim'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (operationConfirmed == null || !operationConfirmed) return;
+                      await drugService.deleteDrugById(_drugs![index].id!);
+                      refreshRequested(null);
+                      messenger.showSnackBar(
+                        const SnackBar(content: Text("Medicamento removido com sucesso.")),
+                      );
+                    }
                   },
                 ),
               ),
